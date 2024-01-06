@@ -10,7 +10,7 @@ selectImagesButton.addEventListener('click', function() {
 
 //Handle file selection
 fileInput.addEventListener('change', function(event) {
-    // You can access the selected files with 'event.target.files'
+    // access the selected files with 'event.target.files'
     const files = event.target.files;
     console.log(files);
 

@@ -8,12 +8,12 @@ selectImagesButton.addEventListener('click', function() {
     fileInput.click();
 });
 
-//Handle file selection
+// Optional: Handle file selection
 fileInput.addEventListener('change', function(event) {
     // You can access the selected files with 'event.target.files'
     const files = event.target.files;
     console.log(files);
 
     // TODO: Handle the files
-    // For example, preview the selected image or upload it to a server
+    // For example, you could preview the selected image or upload it to a server
 });

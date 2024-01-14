@@ -35,7 +35,7 @@ body {
 
 /* New styles for body layout */
 .container {
-
+    
     background-color: #f5f5fa;
     padding: 50px;
     border-radius: 5px;
@@ -57,8 +57,8 @@ h1 {
     text-align: center;
 }
 
-#select-images {
-    display: block; /* Make the button a block-level element */
+.button-style {
+    display: block;
     background-color: #1b99aa;
     color: white;
     border: none;
@@ -66,15 +66,54 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     font-size: 35px;
-    margin: 10px auto; /* Auto margins on both sides to center the button */
-    width: fit-content; /* This will make the width of the button fit its content */
+    margin: 10px auto;
+    width: fit-content;
 }
 
-#select-images:hover {
+.button-style:hover {
     background-color: #2c64c0;
 }
+
 
 .drop-text {
     color: #999;
     text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.enhance-options {
+    text-align: center;
+    margin-top: 60px; /* Adjust as needed */
+}
+
+.enhancement-controls {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.enhance-button {
+    display: block;
+    margin-bottom: 10px; /* Space between buttons */
+    /* Smaller button size */
+    padding: 10px 10px;
+    font-size: 0.8em;
+}
+
+.image-preview-container {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px; /* Space between buttons and image */
+    /* Set a fixed size for the container */
+    width: 500px; /* Adjust to the size you want */
+    height: 300px; /* Adjust to the size you want */
+    overflow: hidden; /* Ensures the image does not spill outside the container */
+}
+
+#image-preview {
+    width: 100%;  /* Makes the image responsive within the container */
+    height: 100%; /* Makes the image responsive within the container */
+    object-fit: contain; /* This will ensure that the aspect ratio is maintained without stretching */
 }

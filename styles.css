@@ -33,7 +33,7 @@ body {
     color: white;
 }
 
-/* New styles for body layout */
+
 .container {
     
     background-color: #f5f5fa;
@@ -41,7 +41,7 @@ body {
     border-radius: 5px;
     width: 80%;
     max-width: 600px;
-    margin: 40px auto; /* Centers the container and adds space from the navigation */
+    margin: 40px auto; 
 }
 
 h1 {
@@ -86,7 +86,7 @@ h1 {
 
 .enhance-options {
     text-align: center;
-    margin-top: 60px; /* Adjust as needed */
+    margin-top: 60px; 
 }
 
 .enhancement-controls {
@@ -96,8 +96,8 @@ h1 {
 
 .enhance-button {
     display: block;
-    margin-bottom: 10px; /* Space between buttons */
-    /* Smaller button size */
+    margin-bottom: 10px; 
+    
     padding: 10px 10px;
     font-size: 0.8em;
 }
@@ -105,15 +105,15 @@ h1 {
 .image-preview-container {
     display: inline-block;
     vertical-align: top;
-    margin-left: 20px; /* Space between buttons and image */
-    /* Set a fixed size for the container */
-    width: 500px; /* Adjust to the size you want */
-    height: 300px; /* Adjust to the size you want */
-    overflow: hidden; /* Ensures the image does not spill outside the container */
+    margin-left: 20px; 
+   
+    width: 500px; 
+    height: 300px; 
+    overflow: hidden; 
 }
 
 #image-preview {
-    width: 100%;  /* Makes the image responsive within the container */
-    height: 100%; /* Makes the image responsive within the container */
-    object-fit: contain; /* This will ensure that the aspect ratio is maintained without stretching */
+    width: 100%;  
+    height: 100%; 
+    object-fit: contain; 
 }

@@ -1,3 +1,5 @@
+import { UploadWidget } from "@bytescale/upload-widget";
+
 class UIManager {
     constructor() {
         this.navLinks = document.querySelectorAll('.nav-link');
@@ -53,6 +55,7 @@ class UIManager {
     setupEnhanceImagesButton() {
         document.getElementById('enhance-images').addEventListener('click', () => {
             this.enhanceFileInput.click();
+            
         });
     }
 

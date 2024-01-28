@@ -1,4 +1,5 @@
-import { UploadWidget } from "@bytescale/upload-widget";
+import { uploadFile } from './APIManager.js';
+
 
 class UIManager {
     constructor() {
@@ -60,18 +61,27 @@ class UIManager {
     }
 
     setupFileInputChange() {
-        this.enhanceFileInput.addEventListener('change', (event) => {
+        this.enhanceFileInput.addEventListener('change', async (event) => {
             const files = event.target.files;
             if (files.length > 0) {
                 // Hide the Enhance Image section
                 document.getElementById('enhance-image-section').classList.add('hidden');
 
+                try {
+            
                 // Update the image preview
                 const imgPreview = document.getElementById('image-preview');
-                imgPreview.src = URL.createObjectURL(files[0]);
-
+                const fileURL = URL.createObjectURL(files[0]);
+                imgPreview.src = fileURL;
+                const uploadResult = await uploadFile(fileURL);
+                console.log('File uploaded:', uploadResult);
                 // Show the image preview and enhancement options
                 document.getElementById('enhance-options').classList.remove('hidden');
+                // Additional actions after successful upload...
+            } catch (error) {
+                console.error('Upload failed:', error);
+                // Handle upload failure...
+            }
             }
         });
     }

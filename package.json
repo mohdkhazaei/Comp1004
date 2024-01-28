@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@bytescale/sdk": "^3.30.0",
     "@bytescale/upload-widget": "^4.23.0"
   }
 }

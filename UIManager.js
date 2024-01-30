@@ -1,3 +1,4 @@
+import { processImage } from './ImageProcessor.js';
 
 class UIManager {
     constructor() {
@@ -5,6 +6,10 @@ class UIManager {
         this.sections = document.querySelectorAll('.container');
         this.startEnhancingButton = document.getElementById('start-enhancing');
         this.enhanceFileInput = document.getElementById('enhance-file-input');
+        this.widthInput = document.getElementById('widthInput');
+        this.heightInput = document.getElementById('heightInput');
+        this.processImageButton = document.getElementById('processImageBtn');
+        this.imagePreview = document.getElementById('image-preview');
         this.init();
     }
 
@@ -57,6 +62,25 @@ class UIManager {
             
         });
     }
+
+    setuprResizeImagesButton() {
+        this.processImageButton.addEventListener('click', () => {
+            const width = this.widthInput.value;
+            const height = this.heightInput.value;
+            const transformationParams = {
+                w: width,
+                h: height
+            };
+            processImage(this.filePath, transformationParams)
+                .then(processedImageUrl => {
+                    this.imagePreview.src = processedImageUrl;
+                })
+                .catch(error => {
+                    console.error('Image processing failed:', error);
+                });
+        });
+    }
+
 
     setupFileInputChange() {
         this.enhanceFileInput.addEventListener('change', (event) => {

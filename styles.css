@@ -35,7 +35,7 @@ body {
 
 
 .container {
-    
+    text-align: center;
     background-color: #f5f5fa;
     padding: 50px;
     border-radius: 5px;
@@ -55,6 +55,26 @@ h1 {
     color: #666;
     margin-bottom: 20px;
     text-align: center;
+}
+
+.input-style {
+    padding: 8px ;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.Small-button-style {
+    display: block;
+    background-color: #1b99aa;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 10px auto;
+    width: fit-content;
 }
 
 .button-style {
@@ -87,12 +107,10 @@ h1 {
 .enhance-options {
     text-align: center;
     margin-top: 60px; 
+    
 }
 
-.enhancement-controls {
-    display: inline-block;
-    vertical-align: top;
-}
+
 
 .enhance-button {
     display: block;
@@ -104,16 +122,46 @@ h1 {
 
 .image-preview-container {
     display: inline-block;
-    vertical-align: top;
-    margin-left: 20px; 
-   
-    width: 500px; 
-    height: 300px; 
-    overflow: hidden; 
+    vertical-align: middle;
+    width: 150%; /* Adjust as needed */
+    height: 300px; /* Adjust as needed */
+    margin-left: -200px;
+    overflow: hidden;
 }
 
 #image-preview {
     width: 100%;  
     height: 100%; 
     object-fit: contain; 
+}
+
+.enhancement-controls {
+    display: inline-block;
+    vertical-align: middle;
+    width: 25%; /* Adjust as needed */
+    margin-left: 550px; /* Space between the image and the controls */
+    margin-top: -250px;
+}
+
+.input-style, .Small-button-style {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%; /* Ensure full width within the parent container */
+    margin-left: -55px;
+}
+
+.Small-button-style-enhance-button{
+
+    display: block;
+    background-color: #1b99aa;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 10px auto;
+    width: fit-content;
+    margin-left: -800px;
+    
 }

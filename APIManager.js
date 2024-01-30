@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const uploadManager = new Bytescale.UploadManager({
-        apiKey: "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh" // This is your API key.
+        apiKey: "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh" 
     });
 
     const onFileSelected = async event => {
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Assuming you have an input element with id 'enhance-file-input' for file selection
+   
     const fileInput = document.getElementById('enhance-file-input');
     if (fileInput) {
         fileInput.addEventListener('change', onFileSelected);

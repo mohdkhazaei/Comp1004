@@ -35,16 +35,22 @@
         <p class="drop-text">or drop images here to enhance</p>
     </section>
 
-    <!-- Enhancement Options (Initially hidden) -->
-    <div id="enhance-options" class="container hidden">
-        <div class="enhancement-controls">
-            <button id="enhance-2x" class="button-style enhance-button">Enhance 2X</button>
-            <button id="enhance-4x" class="button-style enhance-button">Enhance 4X</button>
-        </div>
-        <div class="image-preview-container">
-            <img id="image-preview" src="#" alt="Selected Image" />
-        </div>
+ <!-- Enhancement Options -->
+<div id="enhance-options" class="container hidden">
+    <div class="image-preview-container">
+        <img id="image-preview" src="#" alt="Selected Image" />
     </div>
+    
+    <div class="enhancement-controls">
+        <!-- Width and Height Inputs -->
+        <input type="number" id="widthInput" placeholder="Width" class="input-style">
+        <input type="number" id="heightInput" placeholder="Height" class="input-style">
+        <button id="processImageBtn" class="Small-button-style">Process Image</button>
+        <button id="enhance-2x" class="Small-button-style-enhance-button">Enhance 2X</button>
+        <button id="enhance-4x" class="Small-button-style-enhance-button">Enhance 4X</button>
+    </div>
+</div>
+
     
 
 </body>

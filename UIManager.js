@@ -1,6 +1,6 @@
-import { processImage } from './ImageProcessor.js';
+import { processFile } from './ImageProcessor.js';
 
-class UIManager {
+export class UIManager {
     constructor() {
         this.navLinks = document.querySelectorAll('.nav-link');
         this.sections = document.querySelectorAll('.container');
@@ -10,6 +10,7 @@ class UIManager {
         this.heightInput = document.getElementById('heightInput');
         this.processImageButton = document.getElementById('processImageBtn');
         this.imagePreview = document.getElementById('image-preview');
+
         this.init();
     }
 
@@ -22,6 +23,8 @@ class UIManager {
         this.setupStartEnhancingButton();
         this.setupEnhanceImagesButton();
         this.setupFileInputChange();
+        this.setupResizeImagesButton();
+
     }
 
     setupNavLinks() {
@@ -63,21 +66,30 @@ class UIManager {
         });
     }
 
-    setuprResizeImagesButton() {
-        this.processImageButton.addEventListener('click', () => {
+    setupResizeImagesButton() {
+        this.processImageButton.addEventListener('click', async () => {
             const width = this.widthInput.value;
             const height = this.heightInput.value;
-            const transformationParams = {
-                w: width,
-                h: height
-            };
-            processImage(this.filePath, transformationParams)
-                .then(processedImageUrl => {
-                    this.imagePreview.src = processedImageUrl;
-                })
-                .catch(error => {
-                    console.error('Image processing failed:', error);
-                });
+            const storedFilePath = localStorage.getItem('uploadedFilePath'); // Retrieve the stored filePath
+            if (!storedFilePath) {
+                alert('No file path found. Please upload an image first.');
+                return;
+            }
+            this.showLoadingIndicator();
+            try {
+                // Assuming you have the API key and account ID stored or hardcoded for now
+                const apiKey = "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh";
+                const accountId = "12a1yo3";
+                const imageBlob = await processFile(apiKey, accountId, storedFilePath, width, height);
+
+                // Display the processed image
+                const imgPreview = document.getElementById('image-preview');
+                imgPreview.src = URL.createObjectURL(imageBlob);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to process image. Please try again.');
+            }
+            this.hideLoadingIndicator();
         });
     }
 
@@ -98,7 +110,16 @@ class UIManager {
             }
         });
     }
+
+    showLoadingIndicator() {
+        document.getElementById('loadingIndicator').classList.remove('hidden');
+    }
+    
+    hideLoadingIndicator() {
+        document.getElementById('loadingIndicator').classList.add('hidden');
+    }
 }
 
 // Create an instance of UIManager to initialize the functionality
-new UIManager();
+const uiManager = new UIManager();
+export { uiManager };

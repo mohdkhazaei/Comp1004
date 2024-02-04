@@ -48,17 +48,39 @@
         <img id="image-preview" src="#" alt="Selected Image" />
     </div>
     
+    <!-- Quality Slider -->
+<div class="quality-control">
+    <label for="qualitySlider">Quality: <span id="qualityValue">50</span></label>
+    <input type="range" id="qualitySlider" min="1" max="100" value="50" class="slider">
+</div>
+
+<!-- Download Options -->
+<div class="download-controls">
+    <select id="downloadFormat">
+        <option value="avif">AVIF</option>
+        <option value="bmp">BMP</option>
+        <option value="heic">HEIC</option>
+        <option value="heif">HEIF</option>
+        <option value="jfif">JFIF</option>
+        <option value="jp2">JP2</option>
+        <option value="jpeg">JPEG</option>
+        <option value="jpf">JPF</option>
+        <option value="png">PNG</option>
+        <option value="raw">RAW</option>
+        <option value="svg">SVG</option>
+    </select>
+    <button id="downloadBtn" class="Small-button-style">Download</button>
+</div>
+
     <div class="enhancement-controls">
         <!-- Width and Height Inputs -->
         <input type="number" id="widthInput" placeholder="Width" class="input-style">
         <input type="number" id="heightInput" placeholder="Height" class="input-style">
-        <button id="processImageBtn" class="Small-button-style">Process Image</button>
-        <button id="enhance-2x" class="Small-button-style-enhance-button">Enhance 2X</button>
-        <button id="enhance-4x" class="Small-button-style-enhance-button">Enhance 4X</button>
+        <button id="processImageBtn" class="Small-button-style">Resize Image</button>
     </div>
 </div>
 
-    
+
 
 </body>
 </html>

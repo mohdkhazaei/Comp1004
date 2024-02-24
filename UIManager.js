@@ -12,7 +12,7 @@ export class UIManager {
         this.imagePreview = document.getElementById('image-preview');
 
         const downloadBtn = document.getElementById('downloadBtn');
-        const outputFormat = document.getElementById('downloadFormat');
+        
     
         downloadBtn.addEventListener('click', () => {
             const selectedFormat = outputFormat.value;
@@ -23,12 +23,19 @@ export class UIManager {
             apiKey: "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh"
         });
 
-        const qualitySlider = document.getElementById('qualitySlider');
-        const qualityValue = document.getElementById('qualityValue');
+        this.outputFormat = document.getElementById('downloadFormat');
+        this.qualitySlider = document.getElementById('qualitySlider');
+        this.qualityValue = document.getElementById('qualityValue');
 
         qualitySlider.oninput = function() {
             qualityValue.textContent = this.value;
         }
+
+        downloadBtn.addEventListener('click', async () => {
+            const selectedFormat = this.outputFormat.value;
+            const selectedQuality = this.qualitySlider.value;
+            await this.downloadProcessedImage(selectedFormat, selectedQuality);
+        });
 
         this.init();
     }
@@ -42,7 +49,7 @@ export class UIManager {
         this.setupStartEnhancingButton();
         this.setupEnhanceImagesButton();
         this.setupFileInputChange();
-        this.setupResizeImagesButton();
+       
 
     }
 
@@ -85,33 +92,7 @@ export class UIManager {
         });
     }
 
-    setupResizeImagesButton() {
-        this.processImageButton.addEventListener('click', async () => {
-            const width = this.widthInput.value;
-            const height = this.heightInput.value;
-            const storedFilePath = localStorage.getItem('uploadedFilePath'); // Retrieve the stored filePath
-            if (!storedFilePath) {
-                alert('No file path found. Please upload an image first.');
-                return;
-            }
-            this.showLoadingIndicator();
-            try {
-                
-                const apiKey = "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh";
-                const accountId = "12a1yo3";
-                const imageBlob = await processFile(apiKey, accountId, storedFilePath, width, height);
-
-                // Display the processed image
-                
-                const imgPreview = document.getElementById('image-preview');
-                imgPreview.src = URL.createObjectURL(imageBlob);
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to process image. Please try again.');
-            }
-            this.hideLoadingIndicator();
-        });
-    }
+   
 
 
     setupFileInputChange() {
@@ -154,19 +135,37 @@ export class UIManager {
         document.getElementById('loadingIndicator').classList.add('hidden');
     }
 
-    downloadProcessedImage(format) {
-        filpath = localStorage.getItem('uploadedFilePath');
-        const imageUrl = downloadFileWithFormat(format, filpath);
-    s
-        // Initiate download
-        const link = document.createElement('a');
-        link.href = imageUrl;
-        link.download = 'processed-image.' + format; // Set the download filename
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    async downloadProcessedImage(format, quality) {
+        const storedFilePath = localStorage.getItem('uploadedFilePath');
+        if (!storedFilePath) {
+            alert('No file path found. Please upload an image first.');
+            return;
+        }
+
+        // Show loading indicator while processing and downloading
+        this.showLoadingIndicator();
+
+        try {
+            // Process the file with the selected quality and format
+            const blob = await processFile("public_12a1yo32ypxc9cCHXZj5kuS1ZzDh", "12a1yo3", storedFilePath, format, quality);
+            
+            // Initiate download
+            const downloadLink = document.createElement('a');
+            downloadLink.href = window.URL.createObjectURL(blob);
+            downloadLink.download = `processed_image.${format}`; 
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        } catch (error) {
+            console.error('Error processing and downloading file:', error);
+            alert('Error processing and downloading file. Please try again.');
+        }
+
+        // Hide loading indicator after processing and downloading
+        this.hideLoadingIndicator();
     }
 }
+
 
 // Create an instance of UIManager to initialize the functionality
 const uiManager = new UIManager();

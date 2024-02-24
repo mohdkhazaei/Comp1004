@@ -155,7 +155,7 @@ h1 {
     vertical-align: middle;
     width: 150%; 
     height: 300px; 
-    margin-left: -200px;
+    margin-left: -100px;
     overflow: hidden;
 }
 
@@ -203,6 +203,8 @@ h1 {
 
 .quality-control {
     margin: 20px 10;
+    margin-top: 10px;
+    margin-right: 50px;
 }
 
 .slider {
@@ -245,7 +247,7 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -600px;
+    margin-left: -400px;
 }
 
 .download-controls button {

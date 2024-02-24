@@ -1,13 +1,10 @@
-export async function processFile(apiKey, accountId, storedFilePath, width, height, outputFormat, quality, fit = 'max') {
+export async function processFile(apiKey, accountId, storedFilePath,outputFormat, quality) {
   const fileApi = new Bytescale.FileApi({
       apiKey: apiKey
   });
 
   // Prepare the transformation parameters
   const transformationParams = {
-      w: parseInt(width, 10),
-      h: parseInt(height, 10),
-      fit: fit,
       f: outputFormat,
       q: parseInt(quality, 10),
   };
@@ -51,4 +48,6 @@ export async function downloadFileWithFormat(format, storedFilePath) {
       })
       .catch(error => console.error('Download failed:', error));
 }
+
+
 

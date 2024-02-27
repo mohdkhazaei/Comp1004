@@ -24,30 +24,3 @@ export async function processFile(apiKey, accountId, storedFilePath,outputFormat
 }
 
 
-
-export async function downloadFileWithFormat(format, storedFilePath) {
-  
-  const filePath = storedFilePath;
-  const accountId = "12a1yo3"; 
-  const apiKey = "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh"; 
-
- 
-  const downloadUrl = `https://api.bytescale.com/download/${accountId}${filePath}?apiKey=${apiKey}&format=${format}`;
-
-  // Trigger the download
-  fetch(downloadUrl)
-      .then(response => response.blob())
-      .then(blob => {
-          
-          const downloadLink = document.createElement('a');
-          downloadLink.href = window.URL.createObjectURL(blob);
-          downloadLink.download = `downloaded_file.${format}`; 
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          document.body.removeChild(downloadLink);
-      })
-      .catch(error => console.error('Download failed:', error));
-}
-
-
-

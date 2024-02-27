@@ -110,6 +110,15 @@ h1 {
     
 }
 
+.drop-text {
+    color: #999;
+    text-align: center;
+    border: 2px dashed #ccc; /* Dashed border */
+    padding: 20px; /* Some padding */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+
 .loading-indicator {
     position: fixed;
     top: 0;

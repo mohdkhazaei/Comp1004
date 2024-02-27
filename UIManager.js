@@ -1,7 +1,8 @@
-import { processFile, downloadFileWithFormat } from './ImageProcessor.js';
+import { processFile } from './ImageProcessor.js';
 
 export class UIManager {
     constructor() {
+
         this.navLinks = document.querySelectorAll('.nav-link');
         this.sections = document.querySelectorAll('.container');
         this.startEnhancingButton = document.getElementById('start-enhancing');
@@ -13,11 +14,6 @@ export class UIManager {
 
         const downloadBtn = document.getElementById('downloadBtn');
         
-    
-        downloadBtn.addEventListener('click', () => {
-            const selectedFormat = outputFormat.value;
-            downloadFileWithFormat(selectedFormat);
-        });
 
         this.uploadManager = new Bytescale.UploadManager({
             apiKey: "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh"
@@ -27,6 +23,7 @@ export class UIManager {
         this.qualitySlider = document.getElementById('qualitySlider');
         this.qualityValue = document.getElementById('qualityValue');
 
+    
         qualitySlider.oninput = function() {
             qualityValue.textContent = this.value;
         }
@@ -49,25 +46,68 @@ export class UIManager {
         this.setupStartEnhancingButton();
         this.setupEnhanceImagesButton();
         this.setupFileInputChange();
-       
+        this.resetFileInputAndPreview();
+        this.setupDragAndDrop(); 
+        this.handleFileInputChange();
 
     }
 
     setupNavLinks() {
-        this.navLinks.forEach(link => {
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-
+    
                 const sectionId = link.getAttribute('href').replace('#', '');
                 const targetSection = document.getElementById(sectionId);
-
+    
                 this.deactivateAllLinks();
                 this.hideAllSections();
-
+    
                 link.classList.add('active');
                 targetSection.classList.remove('hidden');
+                
+                if (sectionId === 'image-format') {
+                    this.resetFileInputAndPreview(); // Reset file input and any necessary UI components
+                    this.setupFileInputChange(); // Ensure event listeners are correctly re-attached
+                }
             });
         });
+    }
+
+    setupDragAndDrop() {
+        const dropArea = document.getElementById('drop-area');
+    
+        // Prevent default behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, e => e.preventDefault());
+        });
+    
+        // Highlight effect when dragging images over
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'));
+        });
+    
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'));
+        });
+    
+        // Handle file drop
+        dropArea.addEventListener('drop', e => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+    
+            if (files.length) {
+                this.handleFileInputChange({ target: { files: files } }); // Reuse the file input change handler
+            }
+        });
+    }
+
+    resetFileInputAndPreview() {
+        this.enhanceFileInput.value = ''; // Clear file input
+        // Reset any other UI elements, e.g., hide image preview or reset its source
+        this.imagePreview.src = ''; // Clear image preview source
+      
     }
 
     hideAllSections() {
@@ -86,33 +126,83 @@ export class UIManager {
     }
 
     setupEnhanceImagesButton() {
-        document.getElementById('enhance-images').addEventListener('click', () => {
-            this.enhanceFileInput.click();
-            
-        });
+       // Ensure this method is idempotent
+    const enhanceImagesBtn = document.getElementById('enhance-images');
+
+    // Remove previous listener to avoid duplicates
+    enhanceImagesBtn.removeEventListener('click', this.enhanceImagesClickHandler);
+
+    // Define the click handler
+    this.enhanceImagesClickHandler = () => {
+        this.enhanceFileInput.click();
+       
+    };
+
+    // Attach the event listener
+    enhanceImagesBtn.addEventListener('click', this.enhanceImagesClickHandler);
     }
 
    
 
 
     setupFileInputChange() {
-        this.enhanceFileInput.addEventListener('change', async (event) => {
-            const files = event.target.files;
-            if (files.length > 0) {
-                this.showLoadingIndicator(); // Show loading indicator
-                
-                try {
-                    const { fileUrl, filePath } = await this.uploadManager.upload({ data: files[0] });
-                    localStorage.setItem('uploadedFilePath', filePath); // Save to localStorage
-                    // Update the image preview and show enhancement options
-                    this.updateImagePreviewAndShowOptions(files[0]);
-                } catch (e) {
-                    alert(`Error:\n${e.message}`);
-                }
+         // Clear existing event listeners to avoid duplication
+    this.enhanceFileInput.removeEventListener('change', this.handleFileInputChangeBound);
 
-                this.hideLoadingIndicator(); // Hide loading indicator
+    // Bind the handler so 'this' refers to the class instance
+    // Check if the bound handler exists to avoid re-binding
+    if (!this.handleFileInputChangeBound) {
+        this.handleFileInputChangeBound = this.handleFileInputChange.bind(this);
+    }
+
+    this.enhanceFileInput.addEventListener('change', this.handleFileInputChangeBound);
+
+    }
+
+    async handleFileInputChange(event) {
+        const files = event.target.files;
+    if (files.length === 0) {
+        console.log('No file selected.');
+        return;
+    }
+    const file = files[0]; // Assuming single file selection
+
+    if (!file.type.startsWith('image/')) {
+        alert('Error: The file is not an image.');
+        return;
+    }
+
+    this.showLoadingIndicator();
+
+    
+    // Assuming you have a method to upload and get the file path
+    const uploadedFilePath = await this.uploadFileAndGetPath(file);
+    if (uploadedFilePath) {
+        localStorage.setItem('uploadedFilePath', uploadedFilePath); // Update the path in localStorage
+    }
+
+    this.updateImagePreviewAndShowOptions(file);
+    this.hideLoadingIndicator();
+    this.enhanceFileInput.value = ''; // Clear the file input after processing
+
+    }
+
+    async uploadFileAndGetPath(file) {
+        try {
+            // The upload method expects an object with a 'data' property containing the file
+            const uploadResponse = await this.uploadManager.upload({ data: file });
+            if (uploadResponse.fileUrl && uploadResponse.filePath) {
+              
+                console.log(`File uploaded: ${uploadResponse.fileUrl}`);
+                return uploadResponse.filePath; 
+            } else {
+                console.error('Upload response did not contain fileUrl or filePath');
+                throw new Error('Upload failed');
             }
-        });
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            throw new Error('Failed to upload file');
+        }
     }
 
     updateImagePreviewAndShowOptions(file) {

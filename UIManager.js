@@ -2,7 +2,7 @@ import { processFile } from './ImageProcessor.js';
 
 export class UIManager {
     constructor() {
-
+        
         this.navLinks = document.querySelectorAll('.nav-link');
         this.sections = document.querySelectorAll('.container');
         this.startEnhancingButton = document.getElementById('start-enhancing');
@@ -12,6 +12,16 @@ export class UIManager {
         this.processImageButton = document.getElementById('processImageBtn');
         this.imagePreview = document.getElementById('image-preview');
 
+        // Additional elements for AI Enhance
+        this.aiEnhanceUploadButton = document.getElementById('ai-enhance-upload');
+        this.aiEnhanceFileInput = document.getElementById('ai-enhance-file-input');
+        this.aiEnhanceBeforeImage = document.querySelector('.image-before');
+        this.aiEnhanceAfterImage = document.querySelector('.image-after');
+        this.compareSlider = document.getElementById('Comparison-Slider');
+
+        this.aiEnhanceFileInput.addEventListener('change', this.handleAIEnhanceFileInputChange.bind(this));
+
+        
         const downloadBtn = document.getElementById('downloadBtn');
         
 
@@ -34,6 +44,9 @@ export class UIManager {
             await this.downloadProcessedImage(selectedFormat, selectedQuality);
         });
 
+        
+        
+
         this.init();
     }
 
@@ -49,7 +62,16 @@ export class UIManager {
         this.resetFileInputAndPreview();
         this.setupDragAndDrop(); 
         this.handleFileInputChange();
+        this.setupAISlider();
+        // Hide AI Enhancer controls initially
+   
+        
 
+    
+        // Setup AI Enhance Upload Button
+        this.aiEnhanceUploadButton.addEventListener('click', () => {
+            this.aiEnhanceFileInput.click();
+        });
     }
 
     setupNavLinks() {
@@ -71,9 +93,47 @@ export class UIManager {
                     this.resetFileInputAndPreview(); // Reset file input and any necessary UI components
                     this.setupFileInputChange(); // Ensure event listeners are correctly re-attached
                 }
+                
             });
         });
     }
+
+
+    handleAIEnhanceFileInputChange(event) {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                // Update the source for the before and after images
+                this.aiEnhanceBeforeImage.src = e.target.result;
+                this.aiEnhanceAfterImage.src = e.target.result;
+    
+                // Hide upload controls
+                document.getElementById('ai-enhance-upload').style.display = 'none'; // Hide upload button
+                document.querySelector('#AI-Enhance-section .drop-text').style.display = 'none'; // Hide drop area text
+    
+                // Show the image and slider sections
+                document.getElementById('ai-enhancer-controls').style.display = 'block'; // Show slider controls
+                
+                document.querySelector('.Image-container').style.display = 'block'; // Show image preview
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please upload an image file.');
+        }
+    }
+    
+
+    
+    
+
+    setupAISlider() {
+        const container = document.querySelector('.slider-container');
+        document.querySelector('.Comparison-Slider').addEventListener('input', (e) => {
+          container.style.setProperty('--position', `${e.target.value}%`);
+        });
+    }
+
 
     setupDragAndDrop() {
         const dropArea = document.getElementById('drop-area');
@@ -121,7 +181,7 @@ export class UIManager {
     setupStartEnhancingButton() {
         this.startEnhancingButton.addEventListener('click', () => {
             // Simulate click on Enhance Image nav link
-            document.querySelector('a[href="#enhance-image-section"]').click();
+            document.querySelector('a[href="#Convert-to-section"]').click();
         });
     }
 
@@ -207,7 +267,7 @@ export class UIManager {
 
     updateImagePreviewAndShowOptions(file) {
         // Hide the Enhance Image section
-        document.getElementById('enhance-image-section').classList.add('hidden');
+        document.getElementById('Convert-to-section').classList.add('hidden');
         
         // Update the image preview
         const imgPreview = document.getElementById('image-preview');

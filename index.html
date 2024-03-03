@@ -14,8 +14,8 @@
 <body>
     <nav class="top-nav">
         <a href="#home-section" class="nav-link active">Home</a>
-        <a href="#enhance-image-section" class="nav-link">Convert to</a>
-        <a href="#blur-image-section" class="nav-link">Blur Image</a>
+        <a href="#Convert-to-section" class="nav-link">Convert to</a>
+        <a href="#AI-Enhance-section" class="nav-link">AI Enhance</a>
         <a href="#convert-to-section" class="nav-link">placeholder</a>
     </nav>
 
@@ -34,7 +34,7 @@
 
 
     <!-- Enhance Image Section (Initially hidden) -->
-<section id="enhance-image-section" class="container hidden">
+<section id="Convert-to-section" class="container hidden">
     <h1>switch Image Format</h1>
     <p class="subtitle">change your image file format without quality loss with our enhancement tool.</p>
     <input type="file" id="enhance-file-input" hidden>
@@ -74,6 +74,103 @@
 </div>
 
 
+<!-- AI Enhance Section -->
+<section id="AI-Enhance-section" class="container hidden ">
+    <h1>AI Image Enhancement</h1>
+    <p class="subtitle">See the difference AI enhancement makes.</p>
+    <input type="file" id="ai-enhance-file-input" hidden>
+    <button id="ai-enhance-upload" class="button-style">Upload Image</button>
+    <div id="drop-area" class="drop-text">or drop images here</div>
+    </div>
+
+
+
+<!-- Comparison Container -->
+<div id="ai-enhancer-controls" class="slider-container" style="display: none;">
+
+    <div class="Image-container">
+        <!-- This will be the uploaded image -->
+        <img class="image-before slider-image" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="Before Enhancement">
+
+        <!-- This will be the AI-enhanced image -->
+        <img class="image-after slider-image" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="After Enhancement">
+    </div>
+
+    <input
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+          aria-label="Percentage of before photo shown"
+          class="Comparison-Slider"
+        />
+    
+
+        <div class="slider-line" aria-hidden="true"></div>
+        <div class="slider-button" aria-hidden="true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            viewBox="0 0 256 256"
+          >
+            <rect width="256" height="256" fill="none"></rect>
+            <line
+              x1="128"
+              y1="40"
+              x2="128"
+              y2="216"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            ></line>
+            <line
+              x1="96"
+              y1="128"
+              x2="16"
+              y2="128"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            ></line>
+            <polyline
+              points="48 160 16 128 48 96"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            ></polyline>
+            <line
+              x1="160"
+              y1="128"
+              x2="240"
+              y2="128"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            ></line>
+            <polyline
+              points="208 96 240 128 208 160"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            ></polyline>
+          </svg>
+        </div>
+      </div>
+
+    </section>
+  
 
 </body>
 </html>

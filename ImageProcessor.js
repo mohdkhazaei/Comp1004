@@ -1,3 +1,5 @@
+
+
 export async function processFile(apiKey, accountId, storedFilePath,outputFormat, quality) {
   const fileApi = new Bytescale.FileApi({
       apiKey: apiKey
@@ -23,4 +25,6 @@ export async function processFile(apiKey, accountId, storedFilePath,outputFormat
   }
 }
 
-
+export async function EnhanceImage(imageUrl, Format) {
+    //todo
+}

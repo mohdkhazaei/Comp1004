@@ -1,4 +1,5 @@
 import { processFile } from './ImageProcessor.js';
+import { EnhanceImage } from './ImageProcessor.js';
 
 export class UIManager {
     constructor() {
@@ -23,6 +24,7 @@ export class UIManager {
 
         
         const downloadBtn = document.getElementById('downloadBtn');
+        
         
 
         this.uploadManager = new Bytescale.UploadManager({
@@ -116,6 +118,7 @@ export class UIManager {
                 document.getElementById('ai-enhancer-controls').style.display = 'block'; // Show slider controls
                 
                 document.querySelector('.Image-container').style.display = 'block'; // Show image preview
+                document.querySelector('.upscale-controls').style.display = 'block'; // Show comparison slider
             };
             reader.readAsDataURL(file);
         } else {
@@ -123,7 +126,10 @@ export class UIManager {
         }
     }
     
-
+    EnhanceImage() {
+        // todo
+        
+    }
     
     
 
@@ -314,6 +320,25 @@ export class UIManager {
         // Hide loading indicator after processing and downloading
         this.hideLoadingIndicator();
     }
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 

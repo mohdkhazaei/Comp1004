@@ -24,7 +24,3 @@ export async function processFile(apiKey, accountId, storedFilePath,outputFormat
       throw error;
   }
 }
-
-export async function EnhanceImage(imageUrl, Format) {
-    //todo
-}

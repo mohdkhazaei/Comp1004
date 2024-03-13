@@ -317,11 +317,7 @@ main {
   --position: 50%;
 }
 
-.Image-container {
-  max-width: 8000px;
-  max-height: 8000px;
-  
-}
+
 
 .slider-image {
   width: 100%;
@@ -334,7 +330,7 @@ main {
   position: absolute;
   inset: 0;
   width: var(--position);
-  filter: grayscale(100%)
+  /*filter: grayscale(100%)*/
 }
 
 .Comparison-Slider {
@@ -402,4 +398,13 @@ main {
     display: flex;
     align-items: center; /* Vertically centers the children */
     justify-content: space-between; /* Puts maximum space between the two children */
+    margin-top: -100px;
+    padding: 10px;
+
+}
+
+.upscale-controls, .image-formats {
+    display: flex;
+    align-items: center; /* Aligns items vertically in the center */
+    gap: 10px; /* Adds space between each item in the flex container */
 }

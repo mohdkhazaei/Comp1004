@@ -53,8 +53,9 @@ export class UIManager {
         // Bind the EnhanceImage function to 'this' class instance
         this.EnhanceImage = this.EnhanceImage.bind(this);
 
-        this.EnhancedownloadBtn = document.getElementById('EnhancedownloadBtn');
-        this.EnhancedownloadBtn.addEventListener('click', this.downloadEnhancedImage.bind(this));
+       // Setup download button for upscaled image
+       this.aiDownloadUpscaledBtn = document.getElementById('ai-download-upscaled-btn');
+       this.aiDownloadUpscaledBtn.addEventListener('click', this.downloadUpscaledImage.bind(this));
         
 
         this.init();
@@ -84,6 +85,19 @@ export class UIManager {
         this.aiEnhanceUploadButton.addEventListener('click', () => {
             this.aiEnhanceFileInput.click();
         });
+
+        this.setupDownloadButton();
+
+        
+    }
+
+    setupDownloadButton() {
+        this.aiDownloadUpscaledBtn = document.getElementById('ai-download-upscaled-btn');
+        if (this.aiDownloadUpscaledBtn) {
+            this.aiDownloadUpscaledBtn.addEventListener('click', () => this.downloadUpscaledImage());
+        } else {
+            console.error('Download button not found');
+        }
     }
 
     setupNavLinks() {
@@ -192,6 +206,7 @@ export class UIManager {
                 // Saving the blob URL for downloading
                 const blob = await response.blob();
                 this.upscaledImageUrl = URL.createObjectURL(blob); // Store the blob URL in a class property
+                console.log(`Upscaled image URL set: ${this.upscaledImageUrl}`);
                 document.getElementById('image-after').src = this.upscaledImageUrl;
                 this.hideLoadingIndicator();
             } catch (error) {
@@ -207,19 +222,20 @@ export class UIManager {
             }
     
     
-    downloadEnhancedImage() {
-        if (this.upscaledImageUrl) {
-            // Create a temporary anchor tag to trigger the download
-            const link = document.createElement('a');
-            link.href = this.upscaledImageUrl;
-            link.download = 'upscaled_image.png'; // Or any other extension depending on the image format
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } else {
-            alert("No upscaled image available for download.");
-        }
+    downloadUpscaledImage() {
+        console.log(`Attempting to download upscaled image from: ${this.upscaledImageUrl}`);
+    if (!this.upscaledImageUrl) {
+        alert("No upscaled image available for download.");
+        return;
     }
+
+    const link = document.createElement('a');
+    link.href = this.upscaledImageUrl; // Ensure this.upscaledImageUrl is the URL of the image you want to download
+    link.download = 'upscaled_image.png'; // Specify the download file name
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+} 
 
     setupAISlider() {
         const container = document.querySelector('.slider-container');

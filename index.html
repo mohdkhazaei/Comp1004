@@ -8,7 +8,7 @@
 
     <script src="https://js.bytescale.com/sdk/v3"></script>
     <script type="module" src="uiManager.js" defer></script>
-    <script type="module" src="APIManager.js" defer></script>
+    
 
 </head>
 <body>
@@ -67,6 +67,7 @@
         <option value="png">PNG</option>
         <option value="raw">RAW</option>
         <option value="svg">SVG</option>
+        <option value="gif">GIF</option>
     </select>
     <button id="downloadBtn" class="Small-button-style">Download</button>
 </div>
@@ -172,12 +173,9 @@
     <div class="options-container">
         <!-- Upscale Options -->
         <div class="upscale-controls" style="display: none;">
-            <select id="upscale-list">
-                <option value="2048">2x (2048px)</option>
-                <option value="4096">4x (4096px)</option>
-            </select>
             <button id="upscaleBtn" class="Small-button-style">Upscale Image</button>
             <button id="ai-download-upscaled-btn" class="Small-button-style">Download</button>
+    </div>
         </div>
         
        

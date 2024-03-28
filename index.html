@@ -6,112 +6,49 @@
     <title>Image Enhancement Tool</title>
     <link rel="stylesheet" href="styles.css">
 
-    <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
+  
+
     
-      import {
-            getAuth,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword,
-            onAuthStateChanged,
-            signOut
-        //Update the below URL with the appropriate version if necessary.
-        } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-
-      // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-      const firebaseConfig = {
-        apiKey: "AIzaSyCtEceXO0VbyGgKYr18wMEW6ta8LpS3dPQ",
-        authDomain: "comp1004-a5199.firebaseapp.com",
-        projectId: "comp1004-a5199",
-        storageBucket: "comp1004-a5199.appspot.com",
-        messagingSenderId: "348763445507",
-        appId: "1:348763445507:web:5363396b4926394ca83136",
-        measurementId: "G-G973F3C7X9"
-      };
-    
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-      const auth = getAuth(app);
-
-      const signInEmail = document.getElementById("login-email");
-      const signInPassword = document.getElementById("login-password");
-
-      const signUpEmail = document.getElementById("signup-email");
-      const signUpPassword = document.getElementById("signup-password");
-
-      const signUpButton = document.getElementById("signUp");
-      const signInButton = document.getElementById("signIn");
-
-      const userSignUp = async() => {
-            createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                console.log(user);
-                alert("Your account has been created!");
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode + errorMessage)
-            })
-        }
-
-        const userSignIn = async() => {
-            signInWithEmailAndPassword(auth, signInEmail, signInPassword)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                alert("You have signed in successfully!");
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode + errorMessage)
-            })
-        }
-
-    </script>
-
-
     <script src="https://js.bytescale.com/sdk/v3"></script>
+    <script type="module" src="firebase-config.js"></script>
     <script type="module" src="uiManager.js" defer></script>
+
     
 
 </head>
 <body>
 
-  <div id="auth-overlay" class="auth-overlay">
+  <div id="auth-overlay" class="auth-overlay" style="display:none;">
     <div class="auth-container">
-      <div id="login-form" class="auth-form">
-        <h2>Login</h2>
-        <input type="email" id= "login-email" placeholder="Email" required>
-        <input type="password" id= "login-password" placeholder="Password" required>
-        <button id="signIn">Login</button>
-        <p>Don't have an account? <span onclick="toggleForms()">Sign up</span></p> <br>
-        <span onclick="toggleForms()">Continue as Guest</span>
-      </div>
       <div id="signup-form" class="auth-form" style="display:none;">
         <h2>Signup</h2>
         <input type="text" id= "signup-name" placeholder="Name" required>
         <input type="email" id= "signup-email" placeholder="Email" required>
         <input type="password" id= "signup-password" placeholder="Password" required>
         <button id="signUp">Signup</button>
-        <p>Already have an account? <span onclick="toggleForms()">Login</span></p>
-        <span onclick="toggleForms()">Continue as Guest</span>
+        <p>Already have an account? <span class="toggle-forms">Login</span><br>
+        <span class="continue-as-guest">Continue as Guest</span>
       </div>
+      <div id="login-form" class="auth-form">
+        <h2>Login</h2>
+        <input type="email" id= "login-email" placeholder="Email" required>
+        <input type="password" id= "login-password" placeholder="Password" required>
+        <button id="signIn">Login</button>
+        <p>Don't have an account? <span class="toggle-forms">signUp</span></p> <br>
+        <span class="continue-as-guest">Continue as Guest</span>
+      </div>
+      
     </div>
   </div>
   
     <nav class="top-nav">
         <a href="#home-section" class="nav-link active">Home</a>
+        <a href="#AI-Enhance-section" class="nav-link">AI Upscaler</a>
         <a href="#Convert-to-section" class="nav-link">Convert to</a>
-        <a href="#AI-Enhance-section" class="nav-link">AI Enhance</a>
-        <a href="#convert-to-section" class="nav-link">placeholder</a>
+        <button id="logInBtn" class="nav-button">Log In</button>
+        <button id="signUpBtn" class="nav-button">Sign Up</button>
+        <button id="signOut" class="nav-button hidden" style="display:none;">Sign Out</button>
+        
     </nav>
 
     <!-- Home Section -->
@@ -171,8 +108,8 @@
 
 <!-- AI Enhance Section -->
 <section id="AI-Enhance-section" class="container hidden ">
-    <h1>AI Image Enhancement</h1>
-    <p class="subtitle">See the difference AI enhancement makes.</p>
+    <h1>AI Image Upscaler</h1>
+    <p class="subtitle">See the difference AI Upscaling makes.</p>
     <input type="file" id="ai-enhance-file-input" hidden>
     <button id="ai-enhance-upload" class="button-style">Upload Image</button>
     </div>

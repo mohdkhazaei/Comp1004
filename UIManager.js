@@ -1,4 +1,4 @@
-
+import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut  } from './firebase-config.js';
 
 let navLinks = document.querySelectorAll('.nav-link');
 let sections = document.querySelectorAll('.container');
@@ -48,6 +48,9 @@ function setup() {
     setupUpscaleDownloadButton();
     setupDownloadButton();
     setupUpscaleControls();
+    setupEventListeners();
+    checkAuthState();
+    setupSignOut();
 
     aiEnhanceFileInput.addEventListener('change', handleAIEnhanceFileInputChange);
 
@@ -55,13 +58,164 @@ function setup() {
         await EnhanceImage();
     });
 
-    
-
     aiDownloadUpscaledBtn.addEventListener('click', downloadUpscaledImage);
+
+    
 }
 
+function setupEventListeners() {
+    const signInButton = document.getElementById('signIn');
+    const signUpButton = document.getElementById('signUp');
+
+    signInButton.addEventListener('click', userSignIn); 
+    signUpButton.addEventListener('click', userSignUp); 
+
+    // Setup event listeners for toggling forms and continuing as guest
+    document.querySelectorAll(".toggle-forms").forEach(element => {
+        element.addEventListener("click", toggleForms);
+    });
+
+    document.querySelectorAll(".continue-as-guest").forEach(element => {
+        element.addEventListener("click", continueAsGuest);
+    });
+
+    document.getElementById('logInBtn').addEventListener('click', () => {
+        // Show login form and hide signup form
+        document.getElementById("signup-form").style.display = "none";
+        document.getElementById("login-form").style.display = "block";
+        document.getElementById("auth-overlay").style.display = "block";
+    });
+    
+    document.getElementById('signUpBtn').addEventListener('click', () => {
+        // Show signup form and hide login form
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("signup-form").style.display = "block";
+        document.getElementById("auth-overlay").style.display = "block";
+    });
+    
+    document.getElementById('signOut').addEventListener('click', () => {
+        signOut(auth).then(() => {
+            console.log('User signed out');
+        }).catch((error) => {
+            console.error('Sign out error', error);
+        });
+    });
+
+}
+
+function toggleForms() {
+    const signUpForm = document.getElementById("signup-form");
+    const loginForm = document.getElementById("login-form");
+    
+    if (signUpForm.style.display === "none") {
+        signUpForm.style.display = "block";
+        loginForm.style.display = "none";
+    } else {
+        signUpForm.style.display = "none";
+        loginForm.style.display = "block";
+    }
+}
+
+function continueAsGuest() {
+    const authOverlay = document.getElementById("auth-overlay");
+    authOverlay.style.display = "none";
+    
+}
+
+async function userSignUp() {
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value.trim();
+
+    if (!validateEmail(email) || password === '') {
+        alert('Please enter a valid email and password.');
+        return;
+    }
+    
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("User signed up:", userCredential.user);
+        alert("Your account has been created!");
+        
+       
+        document.getElementById("auth-overlay").style.display = "none";
+        document.getElementById("signOut").style.display = "block";
+         document.getElementById("logInBtn").style.display = "none";
+         document.getElementById("signUpBtn").style.display = "none";
+    } catch (error) {
+        console.error("Signup error:", error);
+        alert("Signup failed: " + error.message);
+    }
+}
+
+
+async function userSignIn() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+
+    if (!validateEmail(email) || password === '') {
+        alert('Please enter a valid email and password.');
+        return;
+    }
+    
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log("User signed in:", userCredential.user);
+        alert("You have signed in successfully!");
+        
+       
+        document.getElementById("auth-overlay").style.display = "none";
+         document.getElementById("signOut").style.display = "block";
+         document.getElementById("logInBtn").style.display = "none";
+         document.getElementById("signUpBtn").style.display = "none";
+    } catch (error) {
+        console.error("Sign-in error:", error);
+        alert("Sign-in failed: " + error.message);
+    }
+}
+
+function checkAuthState() {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById("signOut").classList.remove("hidden");
+            document.getElementById("logInBtn").classList.add("hidden");
+            document.getElementById("signUpBtn").classList.add("hidden");
+        } else {
+            document.getElementById("signOut").classList.add("hidden");
+            document.getElementById("logInBtn").classList.remove("hidden");
+            document.getElementById("signUpBtn").classList.remove("hidden");
+        }
+    });
+}
+
+
+function setupSignOut() {
+    document.getElementById('signOut').addEventListener('click', () => {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log('User signed out');
+         document.getElementById("signOut").style.display = "none";
+         document.getElementById("logInBtn").style.display = "block";
+         document.getElementById("signUpBtn").style.display = "block";
+            // Redirect to login page or update UI
+        }).catch((error) => {
+            // An error happened.
+            console.error('Sign out error', error);
+        });
+    });
+}
+
+
+function validateEmail(email) {
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return regex.test(email);
+}
+
+
+
+  
+
 function setupUpscaleControls() {
-    // Assuming aiEnhanceUploadButton is your "Upload Image" button in the upscale controls
+    
     aiEnhanceUploadButton.addEventListener('click', () => {
         aiEnhanceFileInput.click();
     });
@@ -268,7 +422,7 @@ function setupUpscaleDownloadButton() {
     function setupStartEnhancingButton() {
         startEnhancingButton.addEventListener('click', () => {
             // Simulate click on Enhance Image nav link
-            document.querySelector('a[href="#Convert-to-section"]').click();
+            document.querySelector('a[href="#AI-Enhance-section"]').click();
         });
     }
 
@@ -300,7 +454,7 @@ function setupUpscaleDownloadButton() {
         console.log('No file selected.');
         return;
     }
-    const file = files[0]; // Assuming single file selection
+    const file = files[0]; 
 
     if (!file.type.startsWith('image/')) {
         alert('Error: The file is not an image.');
@@ -309,8 +463,7 @@ function setupUpscaleDownloadButton() {
 
     showLoadingIndicator();
 
-    
-    // Assuming you have a method to upload and get the file path
+ 
     const uploadedFilePath = await uploadFileAndGetPath(file);
     if (uploadedFilePath) {
         localStorage.setItem('uploadedFilePath', uploadedFilePath); // Update the path in localStorage

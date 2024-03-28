@@ -126,7 +126,6 @@ function setupUpscaleDownloadButton() {
     
                 // Hide upload controls
                 document.getElementById('ai-enhance-upload').style.display = 'none'; // Hide upload button
-                document.querySelector('#AI-Enhance-section .drop-text').style.display = 'none'; // Hide drop area text
     
                 // Show the image and slider sections
                 document.getElementById('ai-enhancer-controls').style.display = 'block'; // Show slider controls

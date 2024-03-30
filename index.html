@@ -8,11 +8,11 @@
 
   
 
-    
+     <script type="module" src="firebase-config.js"></script>
     <script src="https://js.bytescale.com/sdk/v3"></script>
-    <script type="module" src="firebase-config.js"></script>
+    
     <script type="module" src="UIManager.js" defer></script>
-
+   
     
 
 </head>
@@ -45,9 +45,13 @@
         <a href="#home-section" class="nav-link active">Home</a>
         <a href="#AI-Enhance-section" class="nav-link">AI Upscaler</a>
         <a href="#Convert-to-section" class="nav-link">Convert to</a>
+        <a href="#yourImagesSection" id="yourImagesBtn" class="nav-link" style="display:none;">Your Images</a>
+
         <button id="logInBtn" class="nav-button">Log In</button>
         <button id="signUpBtn" class="nav-button">Sign Up</button>
         <button id="signOut" class="nav-button hidden" style="display:none;">Sign Out</button>
+        
+
         
     </nav>
 
@@ -219,6 +223,13 @@
 
     
     </section>
+  
+   <!-- Your Images Section -->
+<section id="yourImagesSection" class="container hidden">
+  <h1>Your Images</h1>
+  <div id="imagesGrid" class="images-grid"></div>
+</section>
+
   
 
 </body>

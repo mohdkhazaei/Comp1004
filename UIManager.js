@@ -1,4 +1,6 @@
-import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut  } from './firebase-config.js';
+//UIManager.js
+
+import { userSignUp, userSignIn, setupSignOut, checkAuthState } from './firebase-config.js';
 
 let navLinks = document.querySelectorAll('.nav-link');
 let sections = document.querySelectorAll('.container');
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function setup() {
-    setupNavLinks();
+     setupNavLinks();
     setupStartEnhancingButton();
     setupEnhanceImagesButton();
     setupFileInputChange();
@@ -49,8 +51,7 @@ function setup() {
     setupDownloadButton();
     setupUpscaleControls();
     setupEventListeners();
-    checkAuthState();
-    setupSignOut();
+    checkAuthState(updateUIBasedOnAuth);
 
     aiEnhanceFileInput.addEventListener('change', handleAIEnhanceFileInputChange);
 
@@ -60,15 +61,32 @@ function setup() {
 
     aiDownloadUpscaledBtn.addEventListener('click', downloadUpscaledImage);
 
+    const signInButton = document.getElementById('signIn');
+    const signUpButton = document.getElementById('signUp');
+    const signOutButton = document.getElementById('signOut');
+
+    signInButton.addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        userSignIn(email, password);
+    });
+
+    signUpButton.addEventListener('click', () => {
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        userSignUp(email, password);
+    });
+
+    signOutButton.addEventListener('click', () => {
+        setupSignOut();
+    });
+    
     
 }
 
 function setupEventListeners() {
     const signInButton = document.getElementById('signIn');
     const signUpButton = document.getElementById('signUp');
-
-    signInButton.addEventListener('click', userSignIn); 
-    signUpButton.addEventListener('click', userSignUp); 
 
     // Setup event listeners for toggling forms and continuing as guest
     document.querySelectorAll(".toggle-forms").forEach(element => {
@@ -101,6 +119,29 @@ function setupEventListeners() {
         });
     });
 
+    document.getElementById('yourImagesBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+    
+        // Hide all sections
+        document.querySelectorAll('.container').forEach(section => {
+            section.classList.add('hidden');
+        });
+    
+        // Deactivate all nav links
+        document.querySelectorAll('.nav-link, .nav-button').forEach(link => {
+            link.classList.remove('active');
+        });
+    
+        // Show the "Your Images" section
+        document.getElementById('yourImagesSection').classList.remove('hidden');
+    
+        // Optionally, mark the button as active
+        this.classList.add('active');
+    });
+    
+
+    
+
 }
 
 function toggleForms() {
@@ -122,97 +163,24 @@ function continueAsGuest() {
     
 }
 
-async function userSignUp() {
-    const email = document.getElementById('signup-email').value.trim();
-    const password = document.getElementById('signup-password').value.trim();
-
-    if (!validateEmail(email) || password === '') {
-        alert('Please enter a valid email and password.');
-        return;
-    }
-    
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log("User signed up:", userCredential.user);
-        alert("Your account has been created!");
+function updateUIBasedOnAuth (user) {
+   
         
-       
-        document.getElementById("auth-overlay").style.display = "none";
-        document.getElementById("signOut").style.display = "block";
-         document.getElementById("logInBtn").style.display = "none";
-         document.getElementById("signUpBtn").style.display = "none";
-    } catch (error) {
-        console.error("Signup error:", error);
-        alert("Signup failed: " + error.message);
-    }
-}
-
-
-async function userSignIn() {
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value.trim();
-
-    if (!validateEmail(email) || password === '') {
-        alert('Please enter a valid email and password.');
-        return;
-    }
-    
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("User signed in:", userCredential.user);
-        alert("You have signed in successfully!");
-        
-       
-        document.getElementById("auth-overlay").style.display = "none";
-         document.getElementById("signOut").style.display = "block";
-         document.getElementById("logInBtn").style.display = "none";
-         document.getElementById("signUpBtn").style.display = "none";
-    } catch (error) {
-        console.error("Sign-in error:", error);
-        alert("Sign-in failed: " + error.message);
-    }
-}
-
-function checkAuthState() {
-    onAuthStateChanged(auth, (user) => {
         if (user) {
+            // User is signed in, show the "Your Images" link
+            document.getElementById("yourImagesBtn").style.display = "block";
             document.getElementById("signOut").classList.remove("hidden");
             document.getElementById("logInBtn").classList.add("hidden");
             document.getElementById("signUpBtn").classList.add("hidden");
         } else {
+            // No user is signed in, hide the "Your Images" link
+            document.getElementById("yourImagesBtn").style.display = "none";
             document.getElementById("signOut").classList.add("hidden");
             document.getElementById("logInBtn").classList.remove("hidden");
             document.getElementById("signUpBtn").classList.remove("hidden");
         }
-    });
 }
 
-
-function setupSignOut() {
-    document.getElementById('signOut').addEventListener('click', () => {
-        signOut(auth).then(() => {
-            // Sign-out successful.
-            console.log('User signed out');
-         document.getElementById("signOut").style.display = "none";
-         document.getElementById("logInBtn").style.display = "block";
-         document.getElementById("signUpBtn").style.display = "block";
-            // Redirect to login page or update UI
-        }).catch((error) => {
-            // An error happened.
-            console.error('Sign out error', error);
-        });
-    });
-}
-
-
-function validateEmail(email) {
-    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    return regex.test(email);
-}
-
-
-
-  
 
 function setupUpscaleControls() {
     
@@ -244,29 +212,36 @@ function setupUpscaleDownloadButton() {
 }
 
 
-    function setupNavLinks() {
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-    
-                const sectionId = link.getAttribute('href').replace('#', '');
-                const targetSection = document.getElementById(sectionId);
-    
-                deactivateAllLinks();
-                hideAllSections();
-    
-                link.classList.add('active');
-                targetSection.classList.remove('hidden');
-                
-                if (sectionId === 'image-format') {
-                    resetFileInputAndPreview(); // Reset file input and any necessary UI components
-                    setupFileInputChange(); // Ensure event listeners are correctly re-attached
-                }
-                
+function setupNavLinks() {
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the default anchor action
+
+            const sectionId = this.getAttribute('href').substring(1); // Remove the '#' from the href
+            const targetSection = document.getElementById(sectionId);
+
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.add('hidden');
             });
+
+            // Deactivate all nav links
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show the target section
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            } else {
+                console.error('Section not found:', sectionId);
+            }
+
+            // Mark the clicked nav link as active
+            this.classList.add('active');
         });
-    }
+    });
+}
 
 
     function handleAIEnhanceFileInputChange(event) {

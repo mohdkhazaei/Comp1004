@@ -74,8 +74,8 @@
     <h1>switch Image Format</h1>
     <p class="subtitle">change your image file format without quality loss with our enhancement tool.</p>
     <input type="file" id="enhance-file-input" hidden>
-    <button id="enhance-images" class="button-style">Select images to reformat</button>
-    <div id="drop-area" class="drop-text">or drop images here</div>
+    <button id="enhance-images" class="button-style">Select image to reformat</button>
+    <div id="drop-area" class="drop-text">or drop image here</div>
 </section>
 
  <!-- Enhancement Options -->
@@ -91,6 +91,8 @@
 </div>
 
 <!-- Download Options -->
+
+<div class="download-controls-container">
 <div class="download-controls">
     <select id="downloadFormat" title="Select Download Format">
         <option value="bmp">BMP</option>
@@ -105,7 +107,9 @@
         <option value="svg">SVG</option>
         <option value="gif">GIF</option>
     </select>
-    <button id="downloadBtn" class="Small-button-style">Download</button>
+    <button id="downloadBtn" class="download-specific">Download</button>
+    <button id="enhance-images2" class="download-specific">Select new image</button>
+</div>
 </div>
 </div>
 
@@ -208,8 +212,9 @@
     <div class="options-container">
         <!-- Upscale Options -->
         <div class="upscale-controls" style="display: none;">
-            <button id="upscaleBtn" class="Small-button-style">Upscale Image</button>
-            <button id="ai-download-upscaled-btn" class="Small-button-style">Download</button>
+            <button id="upscaleBtn" class="Small-button-style upscale-specific">Upscale Image</button>
+            <button id="ai-download-upscaled-btn" class="Small-button-style upscale-specific">Download</button>
+            <button id="ai-enhance-upload2" class="Small-button-style upscale-specific">Upload new Image</button>
     </div>
         </div>
         

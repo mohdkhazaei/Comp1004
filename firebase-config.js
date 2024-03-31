@@ -38,6 +38,11 @@ setPersistence(auth, browserLocalPersistence)
         console.error("Error setting persistence:", error);
     });
 
+    const checkAuthState = (callback) => {
+        onAuthStateChanged(auth, user => {
+            callback(user); // Pass the user object to the callback function
+        });
+    };
 
     async function userSignUp() {
       const email = document.getElementById('signup-email').value.trim();
@@ -92,7 +97,6 @@ setPersistence(auth, browserLocalPersistence)
 
 
 function setupSignOut() {
-  document.getElementById('signOut').addEventListener('click', () => {
       signOut(auth).then(() => {
           // Sign-out successful.
           console.log('User signed out');
@@ -104,7 +108,7 @@ function setupSignOut() {
           
           console.error('Sign out error', error);
       });
-  });
+ 
 }
 
 
@@ -113,8 +117,6 @@ function validateEmail(email) {
   return regex.test(email);
 }
 
-const checkAuthState = (callback) => {
-  onAuthStateChanged(auth, callback);
-};
+
   
-export { userSignUp, userSignIn, setupSignOut, checkAuthState };
+export {  userSignUp, userSignIn, setupSignOut, checkAuthState };

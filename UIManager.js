@@ -1,19 +1,17 @@
 //UIManager.js
 
-import { userSignUp, userSignIn, setupSignOut, checkAuthState } from './firebase-config.js';
+import {  userSignUp, userSignIn, setupSignOut, checkAuthState } from './firebase-config.js';
 
 let navLinks = document.querySelectorAll('.nav-link');
 let sections = document.querySelectorAll('.container');
 let startEnhancingButton = document.getElementById('start-enhancing');
 let enhanceFileInput = document.getElementById('enhance-file-input');
-let widthInput = document.getElementById('widthInput');
-let heightInput = document.getElementById('heightInput');
-let processImageButton = document.getElementById('processImageBtn');
 let imagePreview = document.getElementById('image-preview');
 let handleFileInputChangeBound = handleFileInputChange.bind(this);
 
 // Additional elements for AI Enhance
 let aiEnhanceUploadButton = document.getElementById('ai-enhance-upload');
+let aiEnhanceUploadButton2 = document.getElementById('ai-enhance-upload2');
 let aiEnhanceFileInput = document.getElementById('ai-enhance-file-input');
 let aiEnhanceBeforeImage = document.querySelector('.image-before');
 let aiEnhanceAfterImage = document.querySelector('.image-after');
@@ -37,9 +35,12 @@ qualitySlider.oninput = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     setup();
+    
 });
 
 function setup() {
+    checkAuthState(updateUIBasedOnAuth);
+    setupEventListeners();
      setupNavLinks();
     setupStartEnhancingButton();
     setupEnhanceImagesButton();
@@ -47,19 +48,21 @@ function setup() {
     resetFileInputAndPreview();
     setupDragAndDrop();
     setupAISlider();
-    setupUpscaleDownloadButton();
+  
     setupDownloadButton();
     setupUpscaleControls();
-    setupEventListeners();
-    checkAuthState(updateUIBasedOnAuth);
+   
+    
 
-    aiEnhanceFileInput.addEventListener('change', handleAIEnhanceFileInputChange);
+   
 
-    upscaleButton.addEventListener('click', async () => {
-        await EnhanceImage();
-    });
+    
+    
+    
+}
 
-    aiDownloadUpscaledBtn.addEventListener('click', downloadUpscaledImage);
+function setupEventListeners() {
+
 
     const signInButton = document.getElementById('signIn');
     const signUpButton = document.getElementById('signUp');
@@ -80,14 +83,6 @@ function setup() {
     signOutButton.addEventListener('click', () => {
         setupSignOut();
     });
-    
-    
-}
-
-function setupEventListeners() {
-    const signInButton = document.getElementById('signIn');
-    const signUpButton = document.getElementById('signUp');
-
     // Setup event listeners for toggling forms and continuing as guest
     document.querySelectorAll(".toggle-forms").forEach(element => {
         element.addEventListener("click", toggleForms);
@@ -111,13 +106,7 @@ function setupEventListeners() {
         document.getElementById("auth-overlay").style.display = "block";
     });
     
-    document.getElementById('signOut').addEventListener('click', () => {
-        signOut(auth).then(() => {
-            console.log('User signed out');
-        }).catch((error) => {
-            console.error('Sign out error', error);
-        });
-    });
+    
 
     document.getElementById('yourImagesBtn').addEventListener('click', function(e) {
         e.preventDefault();
@@ -135,7 +124,7 @@ function setupEventListeners() {
         // Show the "Your Images" section
         document.getElementById('yourImagesSection').classList.remove('hidden');
     
-        // Optionally, mark the button as active
+       
         this.classList.add('active');
     });
     
@@ -163,31 +152,66 @@ function continueAsGuest() {
     
 }
 
-function updateUIBasedOnAuth (user) {
-   
+function updateUIBasedOnAuth(user) {
+    if (user === undefined) {
+        // Firebase is still initializing, show loading UI or return early without changing the current state
+        showLoadingIndicator();
+        console.log("Auth state is initializing...");
+
         
-        if (user) {
-            // User is signed in, show the "Your Images" link
-            document.getElementById("yourImagesBtn").style.display = "block";
-            document.getElementById("signOut").classList.remove("hidden");
-            document.getElementById("logInBtn").classList.add("hidden");
-            document.getElementById("signUpBtn").classList.add("hidden");
-        } else {
-            // No user is signed in, hide the "Your Images" link
-            document.getElementById("yourImagesBtn").style.display = "none";
-            document.getElementById("signOut").classList.add("hidden");
-            document.getElementById("logInBtn").classList.remove("hidden");
-            document.getElementById("signUpBtn").classList.remove("hidden");
-        }
+        return;
+    } else{
+        hideLoadingIndicator();
+        console.log("Updating UI based on auth state...", user);
+    }
+    
+    
+    if (user) {
+        // User is signed in
+        
+        document.getElementById("yourImagesBtn").style.display = "block";
+        document.getElementById("signOut").style.display = "block";
+        document.getElementById("logInBtn").style.display = "none";
+        document.getElementById("signUpBtn").style.display = "none";
+        
+    } else {
+        // No user is signed in
+      
+        document.getElementById("yourImagesBtn").style.display = "none";
+        document.getElementById("signOut").style.display = "none";
+        document.getElementById("logInBtn").style.display = "block";
+        document.getElementById("signUpBtn").style.display = "block";
+        
+    }
 }
+
 
 
 function setupUpscaleControls() {
+
+    aiEnhanceFileInput.addEventListener('change', handleAIEnhanceFileInputChange);
+
+    upscaleButton.addEventListener('click', async () => {
+        showLoadingIndicator();
+        await EnhanceImage();
+        hideLoadingIndicator();
+    });
     
+
+    aiDownloadUpscaledBtn.addEventListener('click', () =>{ 
+        downloadUpscaledImage();
+    });
+
     aiEnhanceUploadButton.addEventListener('click', () => {
         aiEnhanceFileInput.click();
     });
+
+    aiEnhanceUploadButton2.addEventListener('click', () => {
+        aiEnhanceFileInput.click();
+    });
 }
+
+
 function setupDownloadButton() {
     const downloadBtn = document.getElementById('downloadBtn');
     if (downloadBtn) {
@@ -202,14 +226,7 @@ function setupDownloadButton() {
 }
 
 
-function setupUpscaleDownloadButton() {
-    if (aiDownloadUpscaledBtn) {
-        aiDownloadUpscaledBtn.removeEventListener('click', downloadUpscaledImage);
-        aiDownloadUpscaledBtn.addEventListener('click', downloadUpscaledImage);
-    } else {
-        console.error('Download button not found');
-    }
-}
+
 
 
 function setupNavLinks() {
@@ -278,7 +295,7 @@ function setupNavLinks() {
         }
         const file = fileInput.files[0];
 
-        showLoadingIndicator();
+    
 
         const formData = new FormData();
         formData.append('image', file);
@@ -303,8 +320,6 @@ function setupNavLinks() {
             document.getElementById('image-after').src = upscaledImageUrl;
         } catch (error) {
             console.error('Error upscaling image:', error);
-        } finally {
-            hideLoadingIndicator();
         }
     }
     
@@ -312,6 +327,7 @@ function setupNavLinks() {
     
     
     function downloadUpscaledImage() {
+        showLoadingIndicator();
         if (!upscaledImageUrl) {
             alert("No upscaled image available for download.");
             return;
@@ -335,6 +351,7 @@ function setupNavLinks() {
     
                 
                 URL.revokeObjectURL(blobUrl);
+                hideLoadingIndicator();
             })
             .catch(error => {
                 console.error('Error downloading the image:', error);
@@ -403,6 +420,7 @@ function setupNavLinks() {
 
     function setupEnhanceImagesButton() {
         const enhanceImagesBtn = document.getElementById('enhance-images');
+        const enhanceImagesBtn2 = document.getElementById('enhance-images2');
     
         
         const enhanceImagesClickHandler = () => {
@@ -411,6 +429,7 @@ function setupNavLinks() {
     
        
         enhanceImagesBtn.addEventListener('click', enhanceImagesClickHandler);
+        enhanceImagesBtn2.addEventListener('click', enhanceImagesClickHandler);
     }
     
 

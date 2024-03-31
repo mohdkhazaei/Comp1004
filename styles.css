@@ -87,7 +87,9 @@ h1 {
     border-radius: 4px;
 }
 
-.Small-button-style {
+
+
+.upscale-specific {
     display: block;
     background-color: #1b99aa;
     color: white;
@@ -100,6 +102,12 @@ h1 {
     width: fit-content;
     width: -moz-fit-content;
 }
+.upscale-specific:hover {
+    background-color: #2c64c0;
+}
+
+
+
 
 .button-style {
     display: block;
@@ -138,9 +146,9 @@ h1 {
 .drop-text {
     color: #999;
     text-align: center;
-    border: 2px dashed #ccc; /* Dashed border */
-    padding: 20px; /* Some padding */
-    cursor: pointer; /* Pointer cursor on hover */
+    border: 2px dashed #ccc; 
+    padding: 20px; 
+    cursor: pointer; 
 }
 
 
@@ -185,22 +193,26 @@ h1 {
 }
 
 .image-preview-container {
-    display: inline-block;
-    vertical-align: middle;
-    width: 150%; 
-    height: 300px; 
-    margin-left: -100px;
-    overflow: hidden;
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: auto;
+    position: relative;
+    width: 100%;  
+    height: 100%; 
+    border-radius: 20px;
+    overflow: hidden; 
 }
 
 #image-preview {
     width: 100%;  
     height: 100%; 
-    object-fit: contain; 
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
+
+#image-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
+}
+
+
 
 .enhancement-controls {
     display: inline-block;
@@ -210,14 +222,14 @@ h1 {
     margin-top: -250px;
 }
 
-.input-style, .Small-button-style {
+.input-style, .download-specific {
     display: block;
     margin-bottom: 10px;
     width: 100%;
     margin-left: -55px;
 }
 
-.Small-button-style-enhance-button{
+.download-specific{
 
     display: block;
     background-color: #1b99aa;
@@ -227,21 +239,22 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     font-size: 12px;
-    margin: 10px auto;
     width: fit-content;
     width: -moz-fit-content;
-    margin-left: -800px;
+    margin: 0 5px;
+    margin-top: -120px;
+    
     
     
 }
 
-.Small-button-style-enhance-button:hover , .Small-button-style:hover, .enhance-button:hover{
+.download-specific:hover , .Small-button-style:hover, .enhance-button:hover{
     background-color: #2c64c0;
 }
 
 .quality-control {
     margin: 20px 10;
-    margin-top: 10px;
+    margin-top: 20px;
     margin-right: 50px;
 }
 
@@ -280,20 +293,39 @@ h1 {
     cursor: pointer;
 }
 
-.download-controls {
-    margin-top: 20px;
+.download-controls-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: -400px;
+    justify-content: center; 
+    align-items: center; 
+    margin-top: 20px; 
 }
 
-.download-controls button {
-    margin: 0 5px;
-    width: 100px;
-    margin-left: -105px;
-    margin-top: -120px;
+.download-controls {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px; 
 }
+
+.download-specific, #downloadFormat {
+    margin: 5px 0; 
+    font-size: 12px;
+    padding: 10px 20px; 
+    width: auto; 
+    text-align: center; 
+}
+
+#downloadFormat {
+    padding: 10px; 
+    border-radius: 5px; 
+    border: 1px solid #ccc;
+    cursor: pointer; 
+    background-color: #fff; 
+
+}
+
+
 
 .download-controls select{
 
@@ -315,10 +347,6 @@ iframe {
   aspect-ratio: 16/9;
 }
 
-.video-container {
-  margin: 2rem;
-  max-height: 300px;
-}
 
 img {
   display: block;
@@ -419,8 +447,8 @@ main {
 
 .flex-container {
     display: flex;
-    align-items: center; /* Vertically centers the children */
-    justify-content: space-between; /* Puts maximum space between the two children */
+    align-items: center; 
+    justify-content: space-between; 
     margin-top: -100px;
     padding: 10px;
 
@@ -428,8 +456,8 @@ main {
 
 .upscale-controls, .image-formats {
     display: flex;
-    align-items: center; /* Aligns items vertically in the center */
-    gap: 10px; /* Adds space between each item in the flex container */
+    align-items: center; 
+    gap: 10px; 
 }
 
 .auth-overlay {
@@ -455,7 +483,7 @@ main {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 400px;
     max-width: 400px; 
-    margin: 20px; /* Ensures there's a little space around the form on smaller screens */
+    margin: 20px; 
     margin-left: 650px;
     margin-top: 200px;
 }
@@ -510,6 +538,3 @@ main {
 }
 
 
-.nav-link.hidden {
-    display: none !important;
-}

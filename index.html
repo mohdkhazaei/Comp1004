@@ -216,15 +216,9 @@
             <button id="ai-download-upscaled-btn" class="Small-button-style upscale-specific">Download</button>
             <button id="ai-enhance-upload2" class="Small-button-style upscale-specific">Upload new Image</button>
     </div>
-        </div>
-        
-       
-
-    
-
-
+     </div>
+     </div>
     </div>
-</div>
 
     
     </section>
@@ -235,7 +229,15 @@
   <div id="imagesGrid" class="images-grid"></div>
 </section>
 
-  
+  <!-- Modal for Expanded Image View -->
+<div id="imageModal" class="modal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="modal-img" alt="Uploaded Image">
+  <div id="modal-caption">
+      <p id="modal-type"></p>
+      <button id="modal-download-btn">Download</button>
+  </div>
+</div>
 
 </body>
 </html>

@@ -1,6 +1,6 @@
 //UIManager.js
 
-import {  userSignUp, userSignIn, setupSignOut, checkAuthState } from './firebase-config.js';
+import { loadUserImages, uploadImageReference, userSignUp, userSignIn, setupSignOut, checkAuthState } from './firebase-config.js';
 
 let navLinks = document.querySelectorAll('.nav-link');
 let sections = document.querySelectorAll('.container');
@@ -53,7 +53,18 @@ function setup() {
     setupUpscaleControls();
    
     
+    const modal = document.getElementById('imageModal');
+    const closeButton = document.querySelector('.close');
+    
+    closeButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
 
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
    
 
     
@@ -168,7 +179,7 @@ function updateUIBasedOnAuth(user) {
     
     if (user) {
         // User is signed in
-        
+        loadUserImages();
         document.getElementById("yourImagesBtn").style.display = "block";
         document.getElementById("signOut").style.display = "block";
         document.getElementById("logInBtn").style.display = "none";
@@ -176,7 +187,7 @@ function updateUIBasedOnAuth(user) {
         
     } else {
         // No user is signed in
-      
+        document.getElementById('imagesGrid').innerHTML = '';
         document.getElementById("yourImagesBtn").style.display = "none";
         document.getElementById("signOut").style.display = "none";
         document.getElementById("logInBtn").style.display = "block";
@@ -318,6 +329,7 @@ function setupNavLinks() {
             const data = await response.json();
             upscaledImageUrl = data.output_url; 
             document.getElementById('image-after').src = upscaledImageUrl;
+            uploadImageReference(upscaledImageUrl, 'upscaled');
         } catch (error) {
             console.error('Error upscaling image:', error);
         }
@@ -525,6 +537,7 @@ function setupNavLinks() {
             const downloadLink = document.createElement('a');
             downloadLink.href = window.URL.createObjectURL(blob);
             downloadLink.download = `processed_image.${format}`; 
+            uploadImageReference(downloadLink.href, 'converted');
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
@@ -536,6 +549,7 @@ function setupNavLinks() {
         // Hide loading indicator after processing and downloading
         hideLoadingIndicator();
     }
+    
 
     async function processFile(apiKey, accountId, storedFilePath,outputFormat, quality) {
         const fileApi = new Bytescale.FileApi({

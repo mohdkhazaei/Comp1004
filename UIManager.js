@@ -203,7 +203,7 @@ function setupUpscaleControls() {
 
     upscaleButton.addEventListener('click', async () => {
         showLoadingIndicator();
-        await EnhanceImage(upscaledImageUrl);
+       upscaledImageUrl = await EnhanceImage(upscaledImageUrl);
         hideLoadingIndicator();
     });
     
@@ -348,6 +348,7 @@ function setupNavLinks() {
         } catch (error) {
             console.error('Error upscaling image:', error);
         }
+        return upscaledImageUrl;
     }
     
     

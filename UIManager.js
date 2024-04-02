@@ -2,53 +2,25 @@
 
 import { loadUserImages, uploadImageReference, userSignUp, userSignIn, setupSignOut, checkAuthState } from './firebase-config.js';
 
-let navLinks = document.querySelectorAll('.nav-link');
-let sections = document.querySelectorAll('.container');
-let startEnhancingButton = document.getElementById('start-enhancing');
-let enhanceFileInput = document.getElementById('enhance-file-input');
-let imagePreview = document.getElementById('image-preview');
-let handleFileInputChangeBound = handleFileInputChange.bind(this);
-
-// Additional elements for AI Enhance
-let aiEnhanceUploadButton = document.getElementById('ai-enhance-upload');
-let aiEnhanceUploadButton2 = document.getElementById('ai-enhance-upload2');
-let aiEnhanceFileInput = document.getElementById('ai-enhance-file-input');
-let aiEnhanceBeforeImage = document.querySelector('.image-before');
-let aiEnhanceAfterImage = document.querySelector('.image-after');
-let compareSlider = document.getElementById('Comparison-Slider');
-
-let upscaleButton = document.getElementById('upscaleBtn');
-let aiDownloadUpscaledBtn = document.getElementById('ai-download-upscaled-btn');
-let upscaledImageUrl; // To store upscaled image URL
-
-let uploadManager = new Bytescale.UploadManager({
-    apiKey: "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh"
-});
-
-let outputFormat = document.getElementById('downloadFormat');
-let qualitySlider = document.getElementById('qualitySlider');
-let qualityValue = document.getElementById('qualityValue');
-
-qualitySlider.oninput = function() {
-    qualityValue.textContent = this.value;
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    setup();
-    
-});
+document.addEventListener('DOMContentLoaded', setup);
 
 function setup() {
-    checkAuthState(updateUIBasedOnAuth);
+
+    checkAuthState(user => updateUIBasedOnAuth(user));
     setupEventListeners();
-     setupNavLinks();
+}
+
+function setupEventListeners() {
+    
+    setupNavLinks();
     setupStartEnhancingButton();
     setupEnhanceImagesButton();
     setupFileInputChange();
     resetFileInputAndPreview();
     setupDragAndDrop();
     setupAISlider();
-  
+    handleSignIn();
+    handleSignUp();
     setupDownloadButton();
     setupUpscaleControls();
    
@@ -67,33 +39,17 @@ function setup() {
     });
    
 
-    
-    
-    
-}
-
-function setupEventListeners() {
-
-
     const signInButton = document.getElementById('signIn');
     const signUpButton = document.getElementById('signUp');
     const signOutButton = document.getElementById('signOut');
 
-    signInButton.addEventListener('click', () => {
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        userSignIn(email, password);
-    });
-
-    signUpButton.addEventListener('click', () => {
-        const email = document.getElementById('signup-email').value;
-        const password = document.getElementById('signup-password').value;
-        userSignUp(email, password);
-    });
+    signInButton.addEventListener('click', handleSignIn);
+    signUpButton.addEventListener('click', handleSignUp);
 
     signOutButton.addEventListener('click', () => {
         setupSignOut();
     });
+
     // Setup event listeners for toggling forms and continuing as guest
     document.querySelectorAll(".toggle-forms").forEach(element => {
         element.addEventListener("click", toggleForms);
@@ -157,9 +113,48 @@ function toggleForms() {
     }
 }
 
+
+function handleSignIn() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+    if (email && password) {
+        showLoadingIndicator(); // Show loading indicator
+        userSignIn(email, password)
+            .then(() => {
+                hideLoadingIndicator(); // Hide loading indicator on success
+            })
+            .catch(error => {
+                console.error("Sign-in error:", error.message);
+                alert("Sign-in failed: " + error.message);
+                hideLoadingIndicator(); // Hide loading indicator on error
+            });
+    } else {
+        console.log('Input fields are empty.'); // Or handle this case appropriately
+    }
+}
+
+function handleSignUp() {
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value.trim();
+    if (email && password) {
+        showLoadingIndicator(); // Show loading indicator
+        userSignUp(email, password)
+            .then(() => {
+                hideLoadingIndicator(); // Hide loading indicator on success
+            })
+            .catch(error => {
+                console.error("Signup error:", error.message);
+                alert("Signup failed: " + error.message);
+                hideLoadingIndicator(); // Hide loading indicator on error
+            });
+    } else {
+        console.log('Input fields are empty.'); // Or handle this case appropriately
+    }
+}
+
+
 function continueAsGuest() {
-    const authOverlay = document.getElementById("auth-overlay");
-    authOverlay.style.display = "none";
+    document.getElementById("auth-overlay").style.display = "none";
     
 }
 
@@ -199,18 +194,22 @@ function updateUIBasedOnAuth(user) {
 
 
 function setupUpscaleControls() {
-
-    aiEnhanceFileInput.addEventListener('change', handleAIEnhanceFileInputChange);
+    let upscaleButton = document.getElementById('upscaleBtn');
+    let aiEnhanceUploadButton = document.getElementById('ai-enhance-upload');
+    let aiEnhanceUploadButton2 = document.getElementById('ai-enhance-upload2');
+    let aiEnhanceFileInput = document.getElementById('ai-enhance-file-input');
+    let aiDownloadUpscaledBtn = document.getElementById('ai-download-upscaled-btn');
+    let upscaledImageUrl; // To store upscaled image URL
 
     upscaleButton.addEventListener('click', async () => {
         showLoadingIndicator();
-        await EnhanceImage();
+        await EnhanceImage(upscaledImageUrl);
         hideLoadingIndicator();
     });
     
 
     aiDownloadUpscaledBtn.addEventListener('click', () =>{ 
-        downloadUpscaledImage();
+        downloadUpscaledImage(upscaledImageUrl);
     });
 
     aiEnhanceUploadButton.addEventListener('click', () => {
@@ -220,10 +219,20 @@ function setupUpscaleControls() {
     aiEnhanceUploadButton2.addEventListener('click', () => {
         aiEnhanceFileInput.click();
     });
+
+    aiEnhanceFileInput.addEventListener('change', handleAIEnhanceFileInputChange);
 }
 
 
 function setupDownloadButton() {
+    let outputFormat = document.getElementById('downloadFormat');
+    let qualitySlider = document.getElementById('qualitySlider');
+    let qualityValue = document.getElementById('qualityValue');
+
+    qualitySlider.oninput = function() {
+        qualityValue.textContent = this.value;
+    };
+
     const downloadBtn = document.getElementById('downloadBtn');
     if (downloadBtn) {
         downloadBtn.addEventListener('click', async () => {
@@ -241,6 +250,10 @@ function setupDownloadButton() {
 
 
 function setupNavLinks() {
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.container');
+
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault(); // Prevent the default anchor action
@@ -273,6 +286,8 @@ function setupNavLinks() {
 
 
     function handleAIEnhanceFileInputChange(event) {
+        let aiEnhanceBeforeImage = document.querySelector('.image-before');
+        let aiEnhanceAfterImage = document.querySelector('.image-after');
         const file = event.target.files[0];
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
@@ -298,7 +313,7 @@ function setupNavLinks() {
         }
     }
     
-    async function EnhanceImage() {
+    async function EnhanceImage(upscaledImageUrl) {
         const fileInput = document.getElementById('ai-enhance-file-input');
         if (fileInput.files.length === 0) {
             console.error("No file selected.");
@@ -338,7 +353,7 @@ function setupNavLinks() {
     
     
     
-    function downloadUpscaledImage() {
+    function downloadUpscaledImage(upscaledImageUrl) {
         showLoadingIndicator();
         if (!upscaledImageUrl) {
             alert("No upscaled image available for download.");
@@ -409,21 +424,16 @@ function setupNavLinks() {
     }
 
     function resetFileInputAndPreview() {
+        let imagePreview = document.getElementById('image-preview');
+        let enhanceFileInput = document.getElementById('enhance-file-input');
         enhanceFileInput.value = ''; // Clear file input
         // Reset any other UI elements, e.g., hide image preview or reset its source
         imagePreview.src = ''; // Clear image preview source
       
     }
 
-    function hideAllSections() {
-        sections.forEach(section => section.classList.add('hidden'));
-    }
-
-    function deactivateAllLinks() {
-        navLinks.forEach(link => link.classList.remove('active'));
-    }
-
     function setupStartEnhancingButton() {
+        let startEnhancingButton = document.getElementById('start-enhancing');
         startEnhancingButton.addEventListener('click', () => {
             // Simulate click on Enhance Image nav link
             document.querySelector('a[href="#AI-Enhance-section"]').click();
@@ -436,6 +446,7 @@ function setupNavLinks() {
     
         
         const enhanceImagesClickHandler = () => {
+            let enhanceFileInput = document.getElementById('enhance-file-input');
             enhanceFileInput.click();
         };
     
@@ -446,15 +457,13 @@ function setupNavLinks() {
     
 
     function setupFileInputChange() {
-        // Remove existing event listener
-        enhanceFileInput.removeEventListener('change', handleFileInputChangeBound);
-        // Re-bind the function
-        handleFileInputChangeBound = handleFileInputChange.bind(this);
-        enhanceFileInput.addEventListener('change', handleFileInputChangeBound);
+        const enhanceFileInput = document.getElementById('enhance-file-input');
+        enhanceFileInput.addEventListener('change', (event) => handleFileInputChange(event));
     }
     
 
     async  function handleFileInputChange(event) {
+        let enhanceFileInput = document.getElementById('enhance-file-input');
         const files = event.target.files;
     if (files.length === 0) {
         console.log('No file selected.');
@@ -483,6 +492,11 @@ function setupNavLinks() {
 
     async  function uploadFileAndGetPath(file) {
         try {
+
+            let uploadManager = new Bytescale.UploadManager({
+                apiKey: "public_12a1yo32ypxc9cCHXZj5kuS1ZzDh"
+            });
+
             // The upload method expects an object with a 'data' property containing the file
             const uploadResponse = await uploadManager.upload({ data: file });
             if (uploadResponse.fileUrl && uploadResponse.filePath) {
@@ -551,7 +565,7 @@ function setupNavLinks() {
     }
     
 
-    async function processFile(apiKey, accountId, storedFilePath,outputFormat, quality) {
+    async function processFile(apiKey, accountId, storedFilePath, outputFormat, quality) {
         const fileApi = new Bytescale.FileApi({
             apiKey: apiKey
         });

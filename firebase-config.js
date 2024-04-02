@@ -11,7 +11,9 @@ import {
     browserLocalPersistence 
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
-import { deleteDoc, doc, onSnapshot, collection, addDoc, getFirestore, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+import { deleteDoc, getDoc, doc, onSnapshot, collection, addDoc, getFirestore, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-storage.js";
+
 
 
 // Firebase configuration
@@ -31,6 +33,8 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
+
 
 // Set persistence
 setPersistence(auth, browserLocalPersistence)
@@ -127,22 +131,21 @@ function validateEmail(email) {
 // Assumes user is already logged in
 async function uploadImageReference(imageUrl, type) {
     if (!auth.currentUser) {
-      console.log("No user logged in");
-      return;
+        console.log("No user logged in");
+        return;
     }
     
+    // Assuming you have a way to generate or specify an image name
+    const imageName = `image_${Date.now()}`; // Example image name generation
+
     try {
-      await addDoc(collection(db, "users", auth.currentUser.uid, "images"), {
-        url: imageUrl,
-        user: auth.currentUser.uid,
-        type: type,
-        timestamp: serverTimestamp()
-      });
-      console.log("Image reference added to Firestore");
+        // Handle the complete process of uploading and saving the image reference
+        await handleImageUpload(imageUrl, imageName, type);
     } catch (error) {
-      console.error("Error adding image reference to Firestore:", error);
+        console.error("Error handling image upload:", error);
     }
-  }
+}
+
   
   function loadUserImages() {
     const user = auth.currentUser;
@@ -205,7 +208,7 @@ async function uploadImageReference(imageUrl, type) {
 
 
 function expandImage(imageUrl, imageType, imageName) {
-    // Implement the logic to show an expanded image view. 
+    
     
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modal-img');
@@ -232,17 +235,73 @@ function downloadImage(imageUrl, imageName) {
 
 async function deleteImage(docId) {
     if (!confirm("Are you sure you want to delete this image?")) return;
-    
+
     try {
-        await deleteDoc(doc(db, "users", auth.currentUser.uid, "images", docId));
-        console.log("Document successfully deleted!");
-        loadUserImages(); // Reload images to update the UI
+       
+        const docRef = doc(db, "users", auth.currentUser.uid, "images", docId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const { storagePath } = docSnap.data();
+            
+          
+            if (storagePath) {
+                const fileRef = storageRef(storage, storagePath);
+                await deleteObject(fileRef);
+                console.log("Image deleted from Cloud Storage");
+            }
+
+           
+            await deleteDoc(docRef);
+            console.log("Document successfully deleted from Firestore");
+            loadUserImages(); 
+        } else {
+            console.log("No such document!");
+        }
     } catch (error) {
-        console.error("Error removing document: ", error);
+        console.error("Error removing document or image: ", error);
     }
 }
 
   
+// Function to fetch and convert the temporary URL to a Blob
+async function fetchImageAsBlob(temporaryUrl) {
+    const response = await fetch(temporaryUrl);
+    const blob = await response.blob();
+    return blob;
+}
+
+// Function to upload image to Firebase Cloud Storage and return the permanent URL
+async function uploadImageToCloudStorage(imageBlob, imageName) {
+    const imageRef = storageRef(storage, `images/${imageName}`);
+    await uploadBytes(imageRef, imageBlob);
+    const permanentUrl = await getDownloadURL(imageRef);
+    return permanentUrl;
+}
+
+// Main function to handle the upload and URL saving process
+async function handleImageUpload(temporaryUrl, imageName, type) {
+    try {
+        // Download the image from the temporary URL
+        const imageBlob = await fetchImageAsBlob(temporaryUrl);
+
+        // Upload the image to Firebase Cloud Storage
+        const permanentUrl = await uploadImageToCloudStorage(imageBlob, imageName);
+
+        // Save the permanent URL to Firestore
+        await addDoc(collection(db, "users", auth.currentUser.uid, "images"), {
+            url: permanentUrl,
+            user: auth.currentUser.uid,
+            type: type,
+            storagePath: `images/${imageName}`,
+            timestamp: serverTimestamp()
+        });
+
+        console.log("Image saved with permanent URL:", permanentUrl);
+    } catch (error) {
+        console.error("Error uploading image:", error);
+    }
+}
 
 
   

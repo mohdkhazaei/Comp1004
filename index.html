@@ -34,7 +34,7 @@
         <input type="email" id= "login-email" placeholder="Email" required>
         <input type="password" id= "login-password" placeholder="Password" required>
         <button id="signIn">Login</button>
-        <p>Don't have an account? <span class="toggle-forms">signUp</span></p> <br>
+        <p>Don't have an account? <span class="toggle-forms">SignUp</span></p> <br>
         <span class="continue-as-guest">Continue as Guest</span>
       </div>
       
@@ -125,6 +125,7 @@
 
 
 <!-- Comparison Container -->
+<div class="slider-and-controls-container">
 <div id="ai-enhancer-controls" class="slider-container" style="display: none;">
 
     <div class="Image-container">
@@ -212,19 +213,20 @@
     <div class="options-container">
         <!-- Upscale Options -->
         <div class="upscale-controls" style="display: none;">
-            <button id="upscaleBtn" class="Small-button-style upscale-specific">Upscale Image</button>
-            <button id="ai-download-upscaled-btn" class="Small-button-style upscale-specific">Download</button>
-            <button id="ai-enhance-upload2" class="Small-button-style upscale-specific">Upload new Image</button>
+            <button id="upscaleBtn" class="Small-button-style upscale">Upscale Image</button>
+            <button id="ai-download-upscaled-btn" class="Small-button-style downloadai">Download</button>
+            <button id="ai-enhance-upload2" class="Small-button-style upload2">Upload new Image</button>
     </div>
      </div>
      </div>
     </div>
+  </div>
 
     
     </section>
   
    <!-- Your Images Section -->
-<section id="yourImagesSection" class="container hidden">
+<section id="yourImagesSection" class="container your-images hidden">
   <h1>Your Images</h1>
   <div id="imagesGrid" class="images-grid"></div>
 </section>

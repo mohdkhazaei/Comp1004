@@ -11,7 +11,7 @@ import {
     browserLocalPersistence 
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
-import { deleteDoc, getDoc, doc, onSnapshot, collection, addDoc, getFirestore, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+import { setDoc, deleteDoc, getDoc, doc, onSnapshot, collection, addDoc, getFirestore, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-storage.js";
 
 
@@ -53,30 +53,59 @@ setPersistence(auth, browserLocalPersistence)
         });
     };
 
+
+    async function getUserName(){
+            if (auth.currentUser) {
+                const userRef = doc(db, "users", auth.currentUser.uid);
+                const docSnap = await getDoc(userRef);
+        
+                if (docSnap.exists()) {
+                    return docSnap.data().name; // Return the user's name
+                } else {
+                    console.log("Document does not exist!");
+                    return null;
+                }
+            } else {
+                console.log("No user logged in");
+                return null;
+            }
+        }
+    
     async function userSignUp() {
-      const email = document.getElementById('signup-email').value.trim();
-      const password = document.getElementById('signup-password').value.trim();
-  
-      if (!validateEmail(email) || password === '') {
-          alert('Please enter a valid email and password.');
-          return;
-      }
-      
-      try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          console.log("User signed up:", userCredential.user);
-          alert("Your account has been created!");
-          
-         
-          document.getElementById("auth-overlay").style.display = "none";
-          document.getElementById("signOut").style.display = "block";
-           document.getElementById("logInBtn").style.display = "none";
-           document.getElementById("signUpBtn").style.display = "none";
-      } catch (error) {
-          console.error("Signup error:", error);
-          alert("Signup failed: " + error.message);
-      }
-  }
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value.trim();
+        const name = document.getElementById('signup-name').value.trim(); // Fetch the name
+    
+        if (!validateEmail(email) || password === '' || name === '') {
+            alert('Please enter a valid email, password, and name.');
+            return;
+        }
+        
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            console.log("User signed up:", userCredential.user);
+    
+            // Store user data including name in Firestore under 'users' collection, document ID being the user's UID
+            await setDoc(doc(db, "users", userCredential.user.uid), {
+                name: name,
+                email: email
+            });
+    
+            alert("Your account has been created!");
+
+         document.getElementById("auth-overlay").style.display = "none";
+         document.getElementById("signOut").style.display = "block";
+         document.getElementById("logInBtn").style.display = "none";
+         document.getElementById("signUpBtn").style.display = "none";
+    
+        } catch (error) {
+            console.error("Signup error:", error);
+            alert("Signup failed: " + error.message);
+        }
+    }
+
+
+    
 
 
   async function userSignIn() {
@@ -94,7 +123,7 @@ setPersistence(auth, browserLocalPersistence)
         alert("You have signed in successfully!");
         
        
-        document.getElementById("auth-overlay").style.display = "none";
+         document.getElementById("auth-overlay").style.display = "none";
          document.getElementById("signOut").style.display = "block";
          document.getElementById("logInBtn").style.display = "none";
          document.getElementById("signUpBtn").style.display = "none";
@@ -128,15 +157,15 @@ function validateEmail(email) {
 }
 
 
-// Assumes user is already logged in
+
 async function uploadImageReference(imageUrl, type) {
     if (!auth.currentUser) {
         console.log("No user logged in");
         return;
     }
     
-    // Assuming you have a way to generate or specify an image name
-    const imageName = `image_${Date.now()}`; // Example image name generation
+    
+    const imageName = `image_${Date.now()}`; 
 
     try {
         // Handle the complete process of uploading and saving the image reference
@@ -224,14 +253,15 @@ function expandImage(imageUrl, imageType, imageName) {
     };
 }
 
-function downloadImage(imageUrl, imageName) {
+function downloadImage(imageUrl) {
     const a = document.createElement('a');
     a.href = imageUrl;
-    a.download = imageName || 'downloaded_image';
+    a.target = '_blank';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 }
+
 
 async function deleteImage(docId) {
     if (!confirm("Are you sure you want to delete this image?")) return;
@@ -305,4 +335,4 @@ async function handleImageUpload(temporaryUrl, imageName, type) {
 
 
   
-export {loadUserImages, uploadImageReference, userSignUp, userSignIn, setupSignOut, checkAuthState };
+export {getUserName, loadUserImages, uploadImageReference, userSignUp, userSignIn, setupSignOut, checkAuthState };

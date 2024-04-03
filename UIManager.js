@@ -1,6 +1,6 @@
 //UIManager.js
 
-import { loadUserImages, uploadImageReference, userSignUp, userSignIn, setupSignOut, checkAuthState } from './firebase-config.js';
+import { loadUserImages, getUserName , uploadImageReference, userSignUp, userSignIn, setupSignOut, checkAuthState } from './firebase-config.js';
 
 document.addEventListener('DOMContentLoaded', setup);
 
@@ -48,6 +48,7 @@ function setupEventListeners() {
 
     signOutButton.addEventListener('click', () => {
         setupSignOut();
+        document.getElementById("navbar-username").style.display = "none";
     });
 
     // Setup event listeners for toggling forms and continuing as guest
@@ -113,6 +114,21 @@ function toggleForms() {
     }
 }
 
+async function updateUserNameInUI(){
+
+    const name = await getUserName();
+    if (name) {
+        displayUserName(name);
+    }
+    
+}
+
+function displayUserName(name) {
+    
+    document.getElementById('username').textContent = name;
+
+}
+
 
 function handleSignIn() {
     const email = document.getElementById('login-email').value.trim();
@@ -121,6 +137,8 @@ function handleSignIn() {
         showLoadingIndicator(); // Show loading indicator
         userSignIn(email, password)
             .then(() => {
+                document.getElementById("navbar-username").style.display = "block";
+                updateUserNameInUI();
                 hideLoadingIndicator(); // Hide loading indicator on success
             })
             .catch(error => {
@@ -140,6 +158,8 @@ function handleSignUp() {
         showLoadingIndicator(); // Show loading indicator
         userSignUp(email, password)
             .then(() => {
+                document.getElementById("navbar-username").style.display = "block";
+                updateUserNameInUI();
                 hideLoadingIndicator(); // Hide loading indicator on success
             })
             .catch(error => {
@@ -158,7 +178,9 @@ function continueAsGuest() {
     
 }
 
-function updateUIBasedOnAuth(user) {
+
+
+async function updateUIBasedOnAuth(user) {
     if (user === undefined) {
         // Firebase is still initializing, show loading UI or return early without changing the current state
         showLoadingIndicator();
@@ -174,11 +196,15 @@ function updateUIBasedOnAuth(user) {
     
     if (user) {
         // User is signed in
+        updateUserNameInUI();
         loadUserImages();
+        document.getElementById("navbar-username").style.display = "block";
         document.getElementById("yourImagesBtn").style.display = "block";
         document.getElementById("signOut").style.display = "block";
         document.getElementById("logInBtn").style.display = "none";
         document.getElementById("signUpBtn").style.display = "none";
+
+        
         
     } else {
         // No user is signed in
@@ -552,7 +578,7 @@ function setupNavLinks() {
             const downloadLink = document.createElement('a');
             downloadLink.href = window.URL.createObjectURL(blob);
             downloadLink.download = `processed_image.${format}`; 
-            uploadImageReference(downloadLink.href, 'converted');
+            uploadImageReference(downloadLink.href, 'converted to ' + format);
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
@@ -595,7 +621,7 @@ function setupNavLinks() {
     
     
 
-
+export {displayUserName};
 
 
 

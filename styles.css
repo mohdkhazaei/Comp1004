@@ -24,8 +24,8 @@ body {
 
 @media (max-width: 768px) {
     .top-nav a, .top-nav button {
-        padding: 15px 8px; /* Less padding on smaller screens */
-        font-size: small; /* Smaller font size */
+        padding: 15px 8px; 
+        font-size: small; 
     }
 }
 
@@ -36,9 +36,24 @@ body {
     box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
     z-index: 800;
     position: relative;
+    display: flex; 
+    align-items: center; 
+    justify-content: start; 
+
     
 }
 
+.user-controls {
+    margin-left: auto; 
+    display: flex;
+    align-items: center; 
+}
+
+#navbar-username {
+    margin-left: auto; 
+    padding: 20px 16px; 
+    font-size: medium; 
+}
 
 .top-nav a {
     float: left;
@@ -773,5 +788,3 @@ main {
         padding: 10px 15px; 
     }
 }
-
-

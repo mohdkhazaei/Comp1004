@@ -47,10 +47,13 @@
         <a href="#Convert-to-section" class="nav-link">Convert to</a>
         <a href="#yourImagesSection" id="yourImagesBtn" class="nav-link" style="display:none;">Your Images</a>
 
+        <div class="user-controls">
         <button id="logInBtn" class="nav-button">Log In</button>
         <button id="signUpBtn" class="nav-button">Sign Up</button>
         <button id="signOut" class="nav-button hidden" style="display:none;">Sign Out</button>
-        
+        <div id="navbar-username" style="display: none;"> <div>Welcome back</div> <div id="username"></div> </div>
+
+        </div>
 
         
     </nav>
@@ -106,6 +109,7 @@
         <option value="raw">RAW</option>
         <option value="svg">SVG</option>
         <option value="gif">GIF</option>
+        <option value="exr">EXR</option>
     </select>
     <button id="downloadBtn" class="download-specific">Download</button>
     <button id="enhance-images2" class="download-specific">Select new image</button>

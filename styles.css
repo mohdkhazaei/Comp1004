@@ -1,135 +1,131 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Base styles for the entire page, ensuring consistent margins, paddings, and box-sizing */
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* Default body styling, setting up the font, background color, and default text size */
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5fa;
     font-size: 16px; 
 }
 
-
+/* Adjusts body font size for smaller screens to improve readability */
 @media (max-width: 768px) {
     body {
         font-size: 14px;
     }
 }
 
-.top-nav a, .top-nav button {
-    padding: 20px 10px; 
-}
-
-
-@media (max-width: 768px) {
-    .top-nav a, .top-nav button {
-        padding: 15px 8px; 
-        font-size: small; 
-    }
-}
-
-
+/* Styling for the top navigation bar, including its background, layout, and shadow for depth */
 .top-nav {
     background-color: #ffffff;
-    overflow: hidden;
     box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
-    z-index: 800;
-    position: relative;
-    display: flex; 
-    align-items: center; 
-    justify-content: start; 
-
-    
-}
-
-.user-controls {
-    margin-left: auto; 
     display: flex;
-    align-items: center; 
+    align-items: center;
+    justify-content: start;
+    overflow: hidden;
+    position: relative;
+    z-index: 800;
 }
 
+
+/* General styling for links and buttons in the navigation, making them block elements with specific padding and font size */
+.top-nav a,
+.top-nav button {
+    display: block;
+    padding: 20px 16px;
+    font-size: medium;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* Hover effect for links and buttons, changing background and text color for visual feedback */
+.top-nav a:hover,
+.top-nav button:hover {
+    color: #2c64c0;
+    background-color: #f5f5f5;
+}
+
+
+/* Styling for the active state of navigation links and buttons, making them stand out */
+.top-nav a.active,
+.top-nav button.active {
+    background-color: #2c64c0;
+    color: white;
+}
+
+
+/* Username display styling in the navbar, aligning it to the right */
 #navbar-username {
     margin-left: auto; 
     padding: 20px 16px; 
     font-size: medium; 
 }
 
-.top-nav a {
-    float: left;
-    display: block;
-    color: black;
-    text-align: center;
-    padding: 20px 16px;
-    font-size: medium;
-    text-decoration: none;
+/* Adjusts padding and font size for navigation items on smaller screens for better touch targets and readability */
+@media (max-width: 768px) {
+    .top-nav a,
+    .top-nav button,
+    #navbar-username {
+        padding: 15px 8px;
+        font-size: small;
+    }
 }
 
-.top-nav a:hover {
-    color: #2c64c0;
-    background-color: #f5f5f5;
+/* Styles the user controls container for alignment and spacing */
+.user-controls {
+    margin-left: auto; 
+    display: flex;
+    align-items: center; 
 }
 
-.top-nav a.active {
-    background-color: #2c64c0;
-    color: white;
-}
-
-.top-nav button {
-    float: right;
-    display: block;
-    color: black;
-    text-align: center;
-    padding: 20px 16px;
-    text-decoration: none;
-    background-color: #ffffff;
-    border: none;
-    cursor: pointer;
-    font-size: medium;
-    
-}
-
-.top-nav button:hover {
-    color: #2c64c0;
-    background-color: #f5f5f5;
-}
-
-.top-nav button.active {
-    background-color: #2c64c0;
-    color: #ffffff;
-}
-
+/* Base container style, used for sections of the page. Sets width, padding, margin, and other spacing-related properties */
 .container {
-    text-align: center;
-    background-color: #f5f5fa;
-    padding: 50px;
-    border-radius: 5px;
     width: 80%;
     max-width: 600px;
-    margin: 20px auto; 
-    
-    
+    padding: 50px;
+    margin: 20px auto;
+    text-align: center;
+    background-color: #f5f5fa;
+    border-radius: 5px;
 }
 
+/* Adjusts the padding inside containers on smaller screens for consistency in spacing */
 @media (max-width: 768px) {
     .container {
         padding: 20px; 
     }
 }
 
+
+/* Title and subtitle styles, setting margins for spacing and color for differentiation */
+h1,
+.subtitle {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
 h1 {
     color: #333;
-    margin-bottom: 20px;
     font-size: 3.5em;
-    text-align: center;
 }
 
 .subtitle {
     color: #666;
-    margin-bottom: 20px;
-    text-align: center;
 }
 
+
+/* Style for input fields across the site, setting borders, padding, and margins for a consistent look and feel */
 .input-style {
     padding: 8px ;
     margin: 5px;
@@ -138,70 +134,58 @@ h1 {
 }
 
 
-
-.upscale-specific {
-    display: block;
-    background-color: #1b99aa;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
+/* Styles for areas where files can be dropped, with visual cues for interaction */
+.drop-text {
+    color: #999;
+    text-align: center;
+    border: 2px dashed #ccc;
+    padding: 20px;
     margin: 10px auto;
-    width: fit-content;
-    width: -moz-fit-content;
-}
-.upscale-specific:hover {
-    background-color: #2c64c0;
+    display: block;
 }
 
-
-
-
+/* Button style variations for different actions, setting background colors, padding, font size, and hover effects */
+.upscale-specific,
 .button-style {
     display: block;
     background-color: #1b99aa;
     color: white;
     border: none;
-    padding: 30px 50px;
+    padding: 10px 20px; /* Adjusted for .upscale-specific for consistency */
     border-radius: 5px;
     cursor: pointer;
-    font-size: 35px;
+    font-size: 12px; /* Specific to .upscale-specific */
     margin: 10px auto;
     width: -moz-fit-content;
     width: fit-content;
 }
 
+.button-style {
+    padding: 30px 50px;
+    font-size: 35px;
+}
+
+.upscale-specific:hover,
 .button-style:hover {
     background-color: #2c64c0;
 }
 
 
-.drop-text {
-    color: #999;
-    text-align: center;
-}
-
+/* Helper class to toggle visibility of elements */
 .hidden {
     display: none;
 }
 
+/* Special section for enhancement options with a centralized layout */
 .enhance-options {
     text-align: center;
     margin-top: 60px; 
     
 }
 
-.drop-text {
-    color: #999;
-    text-align: center;
-    border: 2px dashed #ccc; 
-    padding: 20px; 
-    cursor: pointer; 
-}
 
 
+/* Fixed position loading indicator with flex layout to center the spinner and text */
 .loading-indicator {
     position: fixed;
     top: 0;
@@ -220,6 +204,8 @@ h1 {
     display: none;
 }
 
+
+/* Spinner animation styles, using keyframes for continuous rotation */
 .spinner {
     border: 4px solid rgba(0,0,0,.1);
     width: 36px;
@@ -234,6 +220,8 @@ h1 {
     100% { transform: rotate(360deg); }
 }
 
+
+/* Additional button styles for different contexts within the enhancement options */
 .enhance-button {
     display: block;
     margin-bottom: 10px; 
@@ -242,6 +230,8 @@ h1 {
     font-size: 0.8em;
 }
 
+
+/* Container for image preview with positioning and styling for hover effect */
 .image-preview-container {
     position: relative;
     width: 100%;  
@@ -254,7 +244,7 @@ h1 {
     width: 100%;  
     height: auto;
     object-fit: contain;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s ease;
 }
 
 #image-preview:hover {
@@ -264,6 +254,7 @@ h1 {
 
 
 
+/* Controls for image enhancement, adjusting layout for different screen sizes */
 .enhancement-controls {
     display: inline-block;
     vertical-align: middle;
@@ -295,7 +286,7 @@ h1 {
     }
 }
 
-
+/* Styles for input fields and specific buttons, setting them to block display with adjusted margins and width */
 .input-style, .download-specific {
     display: block;
     margin-bottom: 10px;
@@ -303,6 +294,8 @@ h1 {
     margin-left: -55px;
 }
 
+
+/* Further styles for .download-specific buttons, including background color, padding, and hover effects */
 .download-specific{
 
     display: block;
@@ -322,16 +315,22 @@ h1 {
     
 }
 
+
+
 .download-specific:hover , .Small-button-style:hover, .enhance-button:hover{
     background-color: #2c64c0;
 }
 
+
+/* Margin adjustments for the quality control section, providing consistent spacing */
 .quality-control {
     margin: 20px 10;
     margin-top: 20px;
     margin-right: 50px;
 }
 
+
+/* Styling for sliders, including appearance, width, height, and hover effects for better usability */
 .slider {
     -webkit-appearance: none;
     appearance: none;
@@ -341,7 +340,6 @@ h1 {
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
-    -webkit-transition: .2s;
     transition: opacity .2s;
 }
 
@@ -349,6 +347,7 @@ h1 {
     opacity: 1;
 }
 
+/* Custom styles for the slider thumb for WebKit browsers and Firefox */
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -367,6 +366,7 @@ h1 {
     cursor: pointer;
 }
 
+/* Container for download controls, using flexbox for center alignment and spacing */
 .download-controls-container {
     display: flex;
     justify-content: center; 
@@ -374,6 +374,7 @@ h1 {
     margin-top: 20px; 
 }
 
+/* Vertical stack of download controls, centered and spaced for better interaction */
 .download-controls {
     display: flex;
     flex-direction: column; 
@@ -382,6 +383,7 @@ h1 {
     margin-top: 20px; 
 }
 
+/* Style adjustments for download options and format selection */
 .download-specific, #downloadFormat {
     margin: 5px 0; 
     font-size: 12px;
@@ -400,50 +402,45 @@ h1 {
 }
 
 
-
+/* Adjusts the position of select dropdowns, likely for a specific layout */
 .download-controls select{
-
     margin: 0 5px;
     width: 100px;
     margin-left: -400px;
     margin-top: -200px;
 }
 
-*,
-*::after,
-*::before {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+/* Universal image styling, ensuring they don't exceed their container's width and are displayed properly */
+img,
+#image-preview,
+.image-before,
+.image-after {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
-iframe {
-  aspect-ratio: 16/9;
-}
 
-
-img {
-  display: block;
-  max-width: 100%;
-}
-
+/* Centers main content vertically and horizontally, applying a minimum height to fill the viewport */
 main {
   display: grid;
   place-items: center;
   min-height: 100vh;
 }
 
+/* Container for image comparison slider, with positioning and overflow handling */
 .slider-container {
   display: grid;
   place-content: center;
   position: relative;
   overflow: hidden;
   border-radius: 1rem;
-  --position: 50%;
+  --position: 50%; /* Custom property for adjusting the slider's position */
 }
 
 
-
+/* Styles for the images in the comparison slider, ensuring they cover the available space */
 .slider-image {
   width: 100%;
   height: 100%;
@@ -451,13 +448,14 @@ main {
   object-position: left;
 }
 
+/* Positions the 'before' image in the comparison slider, with a variable width */
 .image-before {
   position: absolute;
   inset: 0;
-  width: var(--position);
-  /*filter: grayscale(100%)*/
+  width: var(--position); /* Uses the custom property for dynamic sizing */
 }
 
+/* Invisible slider control for interaction, covering the entire area for easy use */
 .Comparison-Slider {
   position: absolute;
   inset: 0;
@@ -468,6 +466,7 @@ main {
   height: 100%;
 }
 
+/* Focus-visible style for the slider control, adding an outline for accessibility */
 .Comparison-Slider:focus-visible ~ .slider-button {
   outline: 5px solid black;
   outline-offset: 3px;
@@ -479,7 +478,6 @@ main {
   width: .2rem;
   height: 100%;
   background-color: #fff;
-  /* z-index: 10; */
   left: var(--position);
   transform: translateX(-50%);
   pointer-events: none;
@@ -497,10 +495,11 @@ main {
   left: var(--position);
   transform: translate(-50%, -50%);
   pointer-events: none;
-  /* z-index: 100; */
   box-shadow: 1px 1px 1px hsl(0, 50%, 2%, .5);
 }
 
+
+/* Controls for image upscaling, aligned and spaced for clarity and ease of use */
 .upscale-controls {
     justify-content: center;
     align-items: center;
@@ -526,6 +525,8 @@ main {
 
 }
 
+
+/* Flex container for additional layout adjustments, particularly for positioning upscale controls */
 .flex-container {
     display: flex;
     align-items: center; 
@@ -535,12 +536,15 @@ main {
 
 }
 
+
+/* Flexbox layout for grouping controls and formats, facilitating a responsive design */
 .upscale-controls, .image-formats {
     display: flex;
     align-items: center; 
     gap: 10px; 
 }
 
+/* Overlay styling for authentication modal, providing a darkened background and centering the modal */
 .auth-overlay {
     display: flex;
     justify-content: center;
@@ -554,7 +558,7 @@ main {
     z-index: 1000;
 }
 
-
+/* Container for the authentication forms, styled for visibility and user interaction */
 .auth-container {
     justify-content: center;
     align-items: center;
@@ -569,6 +573,7 @@ main {
     margin-top: 200px;
 }
   
+/* Flex layout for the authentication form, aligning items for a structured look */
   .auth-form {
     display: flex;
     flex-direction: column;
@@ -579,6 +584,8 @@ main {
     margin-bottom: 20px;
   }
   
+
+  /* Styling for authentication inputs, ensuring consistency in appearance */
   .auth-form input {
     width: 100%;
     padding: 10px;
@@ -587,6 +594,7 @@ main {
     border-radius: 5px;
   }
   
+  /* Button styling within the authentication form, consistent with other action buttons */
   .auth-form button {
     padding: 10px 20px;
     background-color: #1b99aa;
@@ -596,6 +604,7 @@ main {
     border-radius: 5px;
   }
   
+  /* Text styling within the authentication form, with interactive elements highlighted */
   .auth-form p {
     margin-top: 20px;
   }
@@ -605,22 +614,24 @@ main {
     cursor: pointer;
   }
   
+
+  /* Container for user images, with padding and width adjustments for layout consistency */
   .your-images {
-  
     padding: 10; 
     margin: 0 auto; 
     width: 100%; 
     max-width: none; 
-    
   }
   
+  /* Grid layout for displaying user images, responsive to screen size */
   .images-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 10px;
 }
 
 
+/* Image styling within the grid, with hover effects for interactivity */
   .grid-image {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: block;
@@ -636,9 +647,21 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
+/* Container styling for individual images, with relative positioning for additional elements */
 .image-container {
     position: relative;
 }
+
+.image-wrapper {
+    overflow: visible;
+    transition: transform 0.3s ease;
+}
+
+.image-info {
+    margin-top: 5px;
+}
+
+/* Button styling for actions related to images, consistent with overall design */
 .delete-btn {
     margin-top: 5px;
     padding: 5px 10px;
@@ -651,20 +674,6 @@ main {
     
 }
 
-.delete-btn:hover {
-    background-color: #2c64c0;
-}
-
-
-.image-wrapper {
-    overflow: visible;
-    transition: transform 0.3s ease;
-}
-
-.image-info {
-    margin-top: 5px;
-}
-
 .download-btn {
     margin-top: 5px;
     padding: 5px 10px;
@@ -675,11 +684,16 @@ main {
     border-radius: 5px;
 }
 
-.download-btn:hover {
+/* Hover effects for action buttons, enhancing user feedback */
+.delete-btn:hover, .download-btn:hover {
     background-color: #2c64c0;
 }
 
 
+
+
+
+/* Styling for the modal used to display a larger view of images, including animations for appearance */
 .modal {
     display: none;
     position: fixed;
@@ -695,7 +709,7 @@ main {
     animation: fadeIn 0.5s ease forwards; 
 }
 
-
+/* Content within the modal, styled for visibility and layout */
 .modal-content {
     max-width: 90%;
     max-height: 80vh;
@@ -730,6 +744,7 @@ main {
     }
 }
 
+/* Close button for the modal, ensuring visibility and accessibility */
 .close {
     position: absolute;
     top: 15px;
@@ -740,6 +755,8 @@ main {
     cursor: pointer;
 }
 
+
+/* Caption and download button within the modal, styled for clarity and usability */
 #modal-caption {
     margin: auto;
     display: block;
@@ -754,7 +771,6 @@ main {
 #modal-caption p {
     margin: 15px 0;
 }
-
 #modal-download-btn {
     
     margin-top: 5px;
@@ -770,21 +786,25 @@ main {
     background-color: #2c64c0;
 }
 
+/* Media query adjustments for various elements, ensuring responsiveness and usability on smaller screens */
 @media (max-width: 768px) {
-    .flex-container, .upscale-controls, .image-formats, .download-controls-container {
-        flex-direction: column; 
+    .flex-container,
+    .upscale-controls,
+    .download-controls-container {
+        flex-direction: column;
         align-items: center;
     }
 
-    .enhancement-controls, .auth-container {
-        margin-left: 0; 
-        width: auto; 
+    .enhancement-controls,
+    .auth-container {
+        margin-left: 0;
+        width: auto;
     }
-}
 
-
-@media (max-width: 768px) {
-    .input-style, .button-style, .download-specific, .upscale-specific {
-        padding: 10px 15px; 
+    .input-style,
+    .button-style,
+    .download-specific,
+    .upscale-specific {
+        padding: 10px 15px;
     }
 }

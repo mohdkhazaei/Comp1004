@@ -1,4 +1,6 @@
 //firebase-config.js
+
+// Import necessary Firebase modules for app, authentication, firestore database, and storage services
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
 import {
@@ -10,14 +12,12 @@ import {
     setPersistence, 
     browserLocalPersistence 
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-
 import { setDoc, deleteDoc, getDoc, doc, onSnapshot, collection, addDoc, getFirestore, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-storage.js";
 
 
 
-// Firebase configuration
-
+// Firebase configuration object containing the app's Firebase project settings
 const firebaseConfig = {
     apiKey: "AIzaSyCtEceXO0VbyGgKYr18wMEW6ta8LpS3dPQ",
     authDomain: "comp1004-a5199.firebaseapp.com",
@@ -28,32 +28,32 @@ const firebaseConfig = {
     measurementId: "G-G973F3C7X9"
   };
 
-// Initialize Firebase
+// Initialize Firebase services
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
 
-// Set persistence
-setPersistence(auth, browserLocalPersistence)
-    .then(() => {
-        console.log("Persistence set to 'local'");
-        
-    })
-    .catch((error) => {
-        
-        console.error("Error setting persistence:", error);
-    });
+    // Configure Firebase authentication to use browser local storage for persistence
+    setPersistence(auth, browserLocalPersistence)
+        .then(() => {
+            console.log("Persistence set to 'local'");
+            
+        })
+        .catch((error) => {
+            
+            console.error("Error setting persistence:", error);
+        });
 
+    // Check authentication state and execute a callback function with the user data
     const checkAuthState = (callback) => {
         onAuthStateChanged(auth, user => {
             callback(user); // Pass the user object to the callback function
         });
     };
 
-
+    // Fetches and returns the current user's name from the Firestore database
     async function getUserName(){
             if (auth.currentUser) {
                 const userRef = doc(db, "users", auth.currentUser.uid);
@@ -71,7 +71,10 @@ setPersistence(auth, browserLocalPersistence)
             }
         }
     
+    // Registers a new user with email and password, and stores additional user data in Firestore    
     async function userSignUp() {
+        
+        // Inputs are fetched and trimmed of whitespace
         const email = document.getElementById('signup-email').value.trim();
         const password = document.getElementById('signup-password').value.trim();
         const name = document.getElementById('signup-name').value.trim(); // Fetch the name
@@ -93,6 +96,7 @@ setPersistence(auth, browserLocalPersistence)
     
             alert("Your account has been created!");
 
+         // UI updates following successful signup
          document.getElementById("auth-overlay").style.display = "none";
          document.getElementById("signOut").style.display = "block";
          document.getElementById("logInBtn").style.display = "none";
@@ -107,8 +111,9 @@ setPersistence(auth, browserLocalPersistence)
 
     
 
-
+  // Signs in a user with the provided email and password
   async function userSignIn() {
+
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value.trim();
 
@@ -133,11 +138,12 @@ setPersistence(auth, browserLocalPersistence)
     }
 }
 
-
+// Signs out the currently logged-in user
 function setupSignOut() {
       signOut(auth).then(() => {
+
           // Sign-out successful.
-          console.log('User signed out');
+       console.log('User signed out');
        document.getElementById("signOut").style.display = "none";
        document.getElementById("logInBtn").style.display = "block";
        document.getElementById("signUpBtn").style.display = "block";
@@ -150,15 +156,16 @@ function setupSignOut() {
  
 }
 
-
+// Validates email format using regular expression
 function validateEmail(email) {
   const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return regex.test(email);
 }
 
 
-
+// Uploads an image to Firebase Storage and saves a reference in Firestore
 async function uploadImageReference(imageUrl, type) {
+
     if (!auth.currentUser) {
         console.log("No user logged in");
         return;
@@ -175,7 +182,7 @@ async function uploadImageReference(imageUrl, type) {
     }
 }
 
-  
+  // Loads and displays user's images from Firestore in real-time
   function loadUserImages() {
     const user = auth.currentUser;
     if (!user) {
@@ -188,6 +195,8 @@ async function uploadImageReference(imageUrl, type) {
 
     // Set up a real-time listener
     const imagesRef = collection(db, "users", user.uid, "images");
+
+    // Listen to changes in the 'images' collection of the current user
     onSnapshot(imagesRef, (querySnapshot) => {
       imagesGrid.innerHTML = ''; // Clear existing images before appending new ones
       querySnapshot.forEach((doc) => {
@@ -199,7 +208,7 @@ async function uploadImageReference(imageUrl, type) {
         const imgElement = document.createElement('img');
         imgElement.src = imageData.url;
         imgElement.classList.add('grid-image');
-        imgElement.addEventListener('click', () => expandImage(imageData.url, imageData.type, imageData.name));
+        imgElement.addEventListener('click', () => expandImage(imageData.url, imageData.type, imageData.name)); // Expand the image on click
 
         const typeElement = document.createElement('p');
         typeElement.textContent = `Type: ${imageData.type}`;
@@ -210,7 +219,7 @@ async function uploadImageReference(imageUrl, type) {
         downloadButton.classList.add('download-btn');
         downloadButton.addEventListener('click', (event) => {
             event.stopPropagation(); // Prevent the click from triggering the image expansion
-            downloadImage(imageData.url, imageData.name);
+            downloadImage(imageData.url, imageData.name); // Pass the image URL to the download function
         });
 
         const deleteButton = document.createElement('button');
@@ -224,7 +233,7 @@ async function uploadImageReference(imageUrl, type) {
 
 
 
-        imageWrapper.appendChild(imgElement);
+        imageWrapper.appendChild(imgElement); 
         imageWrapper.appendChild(typeElement);
         imageWrapper.appendChild(downloadButton);
         imageWrapper.appendChild(deleteButton);
@@ -235,26 +244,23 @@ async function uploadImageReference(imageUrl, type) {
     });
 }
 
-
-function expandImage(imageUrl, imageType, imageName) {
+// Function to expand an image in a modal
+function expandImage(imageUrl, imageType) {
     
     
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modal-img');
     const modalType = document.getElementById('modal-type');
-    const modalDownloadBtn = document.getElementById('modal-download-btn');
+
 
     modal.style.display = 'block';
     modalImg.src = imageUrl;
     modalType.textContent = `Type: ${imageType}`;
-    
-    modalDownloadBtn.onclick = function() {
-        downloadImage(imageUrl, imageName);
-    };
 }
 
+// Function to download an image from a URL (does not download properly due to CORS policy restrictions)
 function downloadImage(imageUrl) {
-    const a = document.createElement('a');
+    const a = document.createElement('a'); 
     a.href = imageUrl;
     a.target = '_blank';
     document.body.appendChild(a);
@@ -262,7 +268,7 @@ function downloadImage(imageUrl) {
     document.body.removeChild(a);
 }
 
-
+// Function to delete an image from Firestore and Cloud Storage
 async function deleteImage(docId) {
     if (!confirm("Are you sure you want to delete this image?")) return;
 
@@ -272,17 +278,17 @@ async function deleteImage(docId) {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            const { storagePath } = docSnap.data();
+            const { storagePath } = docSnap.data(); // Get the image's storage path
             
           
             if (storagePath) {
-                const fileRef = storageRef(storage, storagePath);
-                await deleteObject(fileRef);
+                const fileRef = storageRef(storage, storagePath); // Create a reference to the image in Cloud Storage
+                await deleteObject(fileRef); // Delete the image from Cloud Storage
                 console.log("Image deleted from Cloud Storage");
             }
 
            
-            await deleteDoc(docRef);
+            await deleteDoc(docRef); // Delete the image reference from Firestore
             console.log("Document successfully deleted from Firestore");
             loadUserImages(); 
         } else {
@@ -293,8 +299,7 @@ async function deleteImage(docId) {
     }
 }
 
-  
-// Function to fetch and convert the temporary URL to a Blob
+// Function to fetch an image as a Blob from a URL
 async function fetchImageAsBlob(temporaryUrl) {
     const response = await fetch(temporaryUrl);
     const blob = await response.blob();
@@ -309,7 +314,7 @@ async function uploadImageToCloudStorage(imageBlob, imageName) {
     return permanentUrl;
 }
 
-// Main function to handle the upload and URL saving process
+// Uploads the image Blob to Firebase Storage and saves a reference URL in Firestore
 async function handleImageUpload(temporaryUrl, imageName, type) {
     try {
         // Download the image from the temporary URL
@@ -334,5 +339,5 @@ async function handleImageUpload(temporaryUrl, imageName, type) {
 }
 
 
-  
+  // Export functions for external use
 export {getUserName, loadUserImages, uploadImageReference, userSignUp, userSignIn, setupSignOut, checkAuthState };

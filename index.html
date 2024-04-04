@@ -1,87 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic Page Needs -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Enhancement Tool</title>
+    
+    <!-- External CSS -->
     <link rel="stylesheet" href="styles.css">
-
   
-
-     <script type="module" src="firebase-config.js"></script>
-    <script src="https://js.bytescale.com/sdk/v3"></script>
+    <!-- Firebase and SDKs -->
+    <script type="module" src="firebase-config.js"></script> <!-- Firebase Configuration -->
+    <script src="https://js.bytescale.com/sdk/v3"></script> <!-- ByteScale SDK for image processing -->
     
-    <script type="module" src="UIManager.js" defer></script>
-   
-    
-
+    <!-- JavaScript UI Manager -->
+    <script type="module" src="UIManager.js" defer></script> <!-- Defers loading of the UI script until after the page has loaded -->
 </head>
 <body>
-
-  <div id="auth-overlay" class="auth-overlay" style="display:none;">
-    <div class="auth-container">
-      <div id="signup-form" class="auth-form" style="display:none;">
-        <h2>Signup</h2>
-        <input type="text" id= "signup-name" placeholder="Name" required>
-        <input type="email" id= "signup-email" placeholder="Email" required>
-        <input type="password" id= "signup-password" placeholder="Password" required>
-        <button id="signUp">Signup</button>
-        <p>Already have an account? <span class="toggle-forms">Login</span><br>
-        <span class="continue-as-guest">Continue as Guest</span>
-      </div>
-      <div id="login-form" class="auth-form">
-        <h2>Login</h2>
-        <input type="email" id= "login-email" placeholder="Email" required>
-        <input type="password" id= "login-password" placeholder="Password" required>
-        <button id="signIn">Login</button>
-        <p>Don't have an account? <span class="toggle-forms">SignUp</span></p> <br>
-        <span class="continue-as-guest">Continue as Guest</span>
-      </div>
-      
+    <!-- Authentication Overlay (hidden by default) -->
+    <!-- Handles user authentication: Login & Signup -->
+    <div id="auth-overlay" class="auth-overlay" style="display:none;">
+        <div class="auth-container">
+            <!-- Signup Form -->
+            <div id="signup-form" class="auth-form" style="display:none;">
+                <h2>Signup</h2>
+                <!-- Name, Email, and Password fields for new users -->
+                <input type="text" id="signup-name" placeholder="Name" required>
+                <input type="email" id="signup-email" placeholder="Email" required>
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <button id="signUp">Signup</button>
+                <!-- Toggle between Login and Signup forms -->
+                <p>Already have an account? <span class="toggle-forms">Login</span><br>
+                <span class="continue-as-guest">Continue as Guest</span></p>
+            </div>
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <!-- Email and Password fields for existing users -->
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button id="signIn">Login</button>
+                <!-- Toggle between Login and Signup forms -->
+                <p>Don't have an account? <span class="toggle-forms">SignUp</span></p> <br>
+                <span class="continue-as-guest">Continue as Guest</span>
+            </div>
+        </div>
     </div>
-  </div>
   
+    <!-- Navigation Bar -->
+    <!-- Links for navigation and user authentication controls -->
     <nav class="top-nav">
         <a href="#home-section" class="nav-link active">Home</a>
         <a href="#AI-Enhance-section" class="nav-link">AI Upscaler</a>
         <a href="#Convert-to-section" class="nav-link">Convert to</a>
         <a href="#yourImagesSection" id="yourImagesBtn" class="nav-link" style="display:none;">Your Images</a>
 
+        <!-- User Authentication Buttons -->
         <div class="user-controls">
-        <button id="logInBtn" class="nav-button">Log In</button>
-        <button id="signUpBtn" class="nav-button">Sign Up</button>
-        <button id="signOut" class="nav-button hidden" style="display:none;">Sign Out</button>
-        <div id="navbar-username" style="display: none;"> <div>Welcome back</div> <div id="username"></div> </div>
-
+            <button id="logInBtn" class="nav-button">Log In</button>
+            <button id="signUpBtn" class="nav-button">Sign Up</button>
+            <button id="signOut" class="nav-button hidden" style="display:none;">Sign Out</button>
+            <div id="navbar-username" style="display: none;">Welcome back <div id="username"></div></div>
         </div>
-
-        
     </nav>
 
+    
     <!-- Home Section -->
+    <!-- Introduction and start button -->
     <div id="home-section" class="container">
-        <h1>Welcome to PixelScale</h1>
-        <p class="subtitle">The one-stop solution for all your image processing needs.</p>
-        <button id="start-enhancing" class="button-style">Start Enhancing</button>
-    </div>
+      <h1>Welcome to PixelScale</h1>
+      <p class="subtitle">The one-stop solution for all your image processing needs.</p>
+      <button id="start-enhancing" class="button-style">Start Enhancing</button>
+  </div>
 
-    <!-- Loading Indicator -->
+    <!-- Loading Indicator (hidden by default) -->
+    <!-- Indicates processing action to the user -->
     <div id="loadingIndicator" class="loading-indicator hidden">
-        <div class="spinner"></div>
-        <p>Processing...</p>
+      <div class="spinner"></div>
+      <p>Processing...</p>
     </div>
 
+ <!-- Convert-to-Section -->
+    <!-- Allows users to select and convert image formats -->
+    <section id="Convert-to-section" class="container hidden">
+      <h1>Switch Image Format</h1>
+      <p class="subtitle">Change your image file format without quality loss with our enhancement tool.</p>
+      <button id="enhance-images" class="button-style">Select image to reformat</button>
+      <!-- Hidden input for file selection -->
+      <input type="file" id="enhance-file-input" hidden>
+      <div id="drop-area" class="drop-text">or drop image here</div>
+  </section>
 
-    <!-- Enhance Image Section (Initially hidden) -->
-<section id="Convert-to-section" class="container hidden">
-    <h1>switch Image Format</h1>
-    <p class="subtitle">change your image file format without quality loss with our enhancement tool.</p>
-    <input type="file" id="enhance-file-input" hidden>
-    <button id="enhance-images" class="button-style">Select image to reformat</button>
-    <div id="drop-area" class="drop-text">or drop image here</div>
-</section>
-
- <!-- Enhancement Options -->
+  <!-- Enhancement Options (hidden by default) -->
+    <!-- Image preview, quality adjustment, and format selection -->
 <div id="enhance-options" class="container hidden">
     <div class="image-preview-container">
         <img id="image-preview" src="#" alt="Selected Image" />
@@ -93,11 +104,11 @@
     <input type="range" id="qualitySlider" min="1" max="100" value="50" class="slider">
 </div>
 
-<!-- Download Options -->
-
+<!-- Download controls -->
 <div class="download-controls-container">
 <div class="download-controls">
     <select id="downloadFormat" title="Select Download Format">
+       <!-- Image format options -->
         <option value="bmp">BMP</option>
         <option value="heic">HEIC</option>
         <option value="heif">HEIF</option>
@@ -118,19 +129,21 @@
 </div>
 
 
-<!-- AI Enhance Section -->
-<section id="AI-Enhance-section" class="container hidden ">
-    <h1>AI Image Upscaler</h1>
-    <p class="subtitle">See the difference AI Upscaling makes.</p>
-    <input type="file" id="ai-enhance-file-input" hidden>
-    <button id="ai-enhance-upload" class="button-style">Upload Image</button>
-    </div>
+   <!-- AI Enhance Section (hidden by default) -->
+    <!-- AI upscaling feature introduction and upload button -->
+    <section id="AI-Enhance-section" class="container hidden">
+      <h1>AI Image Upscaler</h1>
+      <p class="subtitle">See the difference AI Upscaling makes.</p>
+      <button id="ai-enhance-upload" class="button-style">Upload Image</button>
+      <input type="file" id="ai-enhance-file-input" hidden>
+    
 
 
 
-<!-- Comparison Container -->
-<div class="slider-and-controls-container">
-<div id="ai-enhancer-controls" class="slider-container" style="display: none;">
+ <!-- Comparison Container (hidden by default) -->
+    <!-- Before and after sliders for AI enhanced images -->
+    <div class="slider-and-controls-container">
+      <div id="ai-enhancer-controls" class="slider-container" style="display: none;">
 
     <div class="Image-container">
         <!-- This will be the uploaded image -->
@@ -140,6 +153,7 @@
         <img id="image-after" class="image-after slider-image" src="" alt="After Enhancement">
     </div>
 
+    <!-- Slider for comparison -->
     <input
           type="range"
           min="0"
@@ -214,36 +228,33 @@
       </div>
 
       <div class="flex-container">
-    <div class="options-container">
-        <!-- Upscale Options -->
-        <div class="upscale-controls" style="display: none;">
+        <div class="options-container">
+            <div class="upscale-controls" style="display: none;">
             <button id="upscaleBtn" class="Small-button-style upscale">Upscale Image</button>
             <button id="ai-download-upscaled-btn" class="Small-button-style downloadai">Download</button>
             <button id="ai-enhance-upload2" class="Small-button-style upload2">Upload new Image</button>
+         </div>
+        </div>
+       </div>
+      </div>
     </div>
-     </div>
-     </div>
-    </div>
-  </div>
-
-    
-    </section>
+  </section>
   
-   <!-- Your Images Section -->
-<section id="yourImagesSection" class="container your-images hidden">
-  <h1>Your Images</h1>
-  <div id="imagesGrid" class="images-grid"></div>
-</section>
+ <!-- Your Images Section (hidden by default) -->
+    <!-- Display user images -->
+    <section id="yourImagesSection" class="container your-images hidden">
+      <h1>Your Images</h1>
+      <div id="imagesGrid" class="images-grid"></div>
+  </section>
 
-  <!-- Modal for Expanded Image View -->
-<div id="imageModal" class="modal">
-  <span class="close">&times;</span>
-  <img class="modal-content" id="modal-img" alt="Uploaded Image">
-  <div id="modal-caption">
-      <p id="modal-type"></p>
-      <button id="modal-download-btn">Download</button>
+  <!-- Modal for Expanded Image View (hidden by default) -->
+  <!-- Large view of selected image with download option -->
+  <div id="imageModal" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="modal-img" alt="Uploaded Image">
+      <div id="modal-caption">
+         
+      </div>
   </div>
-</div>
-
 </body>
 </html>

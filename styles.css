@@ -144,6 +144,12 @@ h1 {
     display: block;
 }
 
+/* Styling for the file drop on file hover */
+.highlight {
+    color: #333;
+    border-color: #333;
+}
+
 /* Button style variations for different actions, setting background colors, padding, font size, and hover effects */
 .upscale-specific,
 .button-style {
@@ -771,20 +777,7 @@ main {
 #modal-caption p {
     margin: 15px 0;
 }
-#modal-download-btn {
-    
-    margin-top: 5px;
-    padding: 5px 10px;
-    background-color: #1b99aa;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
 
-#modal-download-btn:hover {
-    background-color: #2c64c0;
-}
 
 /* Media query adjustments for various elements, ensuring responsiveness and usability on smaller screens */
 @media (max-width: 768px) {

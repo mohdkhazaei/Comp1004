@@ -2,7 +2,6 @@
 
 // Import necessary Firebase modules for app, authentication, firestore database, and storage services
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
 import {
     getAuth, 
     createUserWithEmailAndPassword, 

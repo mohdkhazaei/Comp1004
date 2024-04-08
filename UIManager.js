@@ -316,7 +316,7 @@ function handleAIEnhanceFileInputChange(event) {
         formData.append('image', file);
     
         try {
-            // Make a POST request to the API with the image.
+            // Make a POST request to the DeepAI API with the image.
             const response = await fetch('https://api.deepai.org/api/torch-srgan', {
                 method: 'POST',
                 headers: {
@@ -606,7 +606,7 @@ function handleAIEnhanceFileInputChange(event) {
 
     }
     
-    // Calls an API to transform the image file based on user-selected options.
+    // Calls an ByteScale API to transform the image file based on user-selected options.
     async function processFile(apiKey, accountId, storedFilePath, outputFormat, quality) {
 
         try {

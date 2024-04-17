@@ -23,8 +23,11 @@ Welcome to the Image Enhancement Tool repository! This academic project presents
 The project is ready to run out of the box, with all necessary configurations, including API keys and Firebase CDN integrations, directly included within the project files.
 
 1. **Clone the Repository**: Clone this repository to your local machine to get started.
-2. **Open the Project**: Load the files in your preferred code editor and run to start exploring the functionalities of the Image Enhancement Tool.
-3. **alternativly**: use this link to access the SPA directly via Vercel where its hosted " https://comp1004-oziaqshk0-mohdkhazaeis-projects.vercel.app/ ".
+2. **Open the Project**: Load the files in your preferred code editor (ideally visual studio code) and download the live server extension and run via the extension to start exploring the functionalities of the Image Enhancement Tool.
+   
+    ![image](https://github.com/mohdkhazaei/Comp1004/assets/105325272/804041f7-a86b-41da-933d-20ec45c21454)
+   
+4. **alternativly**: use this link to access the SPA directly via Vercel where its hosted " https://comp1004-oziaqshk0-mohdkhazaeis-projects.vercel.app/ ".
 
 ## Project Structure
 

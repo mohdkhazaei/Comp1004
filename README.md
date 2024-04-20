@@ -29,6 +29,9 @@ The project is ready to run out of the box, with all necessary configurations, i
    
 4. **alternativly**: use this link to access the SPA directly via Vercel where its hosted " https://comp1004-oziaqshk0-mohdkhazaeis-projects.vercel.app/ ".
 5. note: the AI upscaling works better on blurry/drawn images
+   
+![Screenshot 2024-04-20 084404](https://github.com/mohdkhazaei/Comp1004/assets/105325272/d2f4e635-6984-475c-b9ee-7f4a2f96b2d0)
+
 
 ## Project Structure
 
